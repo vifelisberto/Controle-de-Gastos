@@ -1,0 +1,9 @@
+<ion-list *ngIf="expenses">
+  <ion-item *ngFor="let expense of expenses">
+    <ion-label slot="start">
+      <ion-row>{{ expense.title }}</ion-row>
+      <ion-row>{{ expense.dueDate | date: 'dd/MM/yyyy'}}</ion-row>
+    </ion-label>
+    <ion-note slot="end">R$ {{ expense.value }}</ion-note>
+  </ion-item>
+</ion-list>

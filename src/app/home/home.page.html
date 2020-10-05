@@ -1,0 +1,15 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Controle de Gastos
+    </ion-title>
+  </ion-toolbar>
+
+  <app-month-select (eventMonth)="updateExpensesMonth($event)"></app-month-select>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <app-expense-items *ngIf="expenses" [expenses]="expenses"></app-expense-items>
+</ion-content>
+
+<app-add-expense></app-add-expense>

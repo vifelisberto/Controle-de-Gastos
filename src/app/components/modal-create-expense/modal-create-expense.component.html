@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Nova despesa
+    </ion-title>
+  </ion-toolbar>
+
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <form (ngSubmit)="addNewExpense($event)">
+    <ion-item>
+      <ion-label position="floating">Descrição</ion-label>
+      <ion-input type="text" formControlName="title"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Valor</ion-label>
+      <ion-input type="number" formControlName="value"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Data</ion-label>
+      <ion-datetime formControlName="value" display-timezone="utc"></ion-datetime>
+    </ion-item>
+    <ion-button type="submit" [disabled]="this.expense.valid" expand="full">Adicionar Despesa</ion-button>
+  </form>
+</ion-content>

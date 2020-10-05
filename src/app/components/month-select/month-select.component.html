@@ -1,0 +1,17 @@
+<ion-toolbar>
+  <ion-segment value="month">
+
+    <ion-segment-button (click)="changeMonth(false)" value="backMonth">
+      <ion-icon name="arrow-back-outline"></ion-icon>
+    </ion-segment-button>
+
+    <ion-segment-button value="month">
+      {{ months[monthSelect] }}
+    </ion-segment-button>
+
+    <ion-segment-button (click)="changeMonth(true)" value="nextMonth">
+      <ion-icon name="arrow-forward-outline"></ion-icon>
+    </ion-segment-button>
+
+  </ion-segment>
+</ion-toolbar>
