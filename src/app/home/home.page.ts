@@ -7,7 +7,7 @@ import { Storage } from '@ionic/storage'
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePageComponent {
   public monthSelect: number
   public expenses: ExpenseItem[]
 

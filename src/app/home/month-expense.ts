@@ -1,4 +1,4 @@
-import { ExpenseItem } from '../components/expense-items/expense-item';
+import { ExpenseItem } from '../components/expense-items/expense-item'
 
 export interface MonthExpenses {
   months: [
@@ -14,5 +14,5 @@ export interface MonthExpenses {
     ExpenseItem[]?,
     ExpenseItem[]?,
     ExpenseItem[]?,
-   ];
+  ]
 }
