@@ -9,8 +9,6 @@ import { ExpenseItem } from './expense-item'
 export class ExpenseItemsComponent implements OnChanges {
   @Input() expenses: ExpenseItem[]
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
-    this.expenses = changes.expenses.currentValue
-  }
+  ngOnChanges = (changes: SimpleChanges) =>
+    (this.expenses = changes.expenses.currentValue)
 }

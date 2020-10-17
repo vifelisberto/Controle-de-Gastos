@@ -1,6 +1,6 @@
 import { ExpenseItem } from './../components/expense-items/expense-item'
 import { Component } from '@angular/core'
-import { Storage } from '@ionic/storage'
+import { MonthExpenses } from './month-expense'
 
 @Component({
   selector: 'app-home',
@@ -8,40 +8,34 @@ import { Storage } from '@ionic/storage'
   styleUrls: ['home.page.scss'],
 })
 export class HomePageComponent {
+  public expensesMonth: MonthExpenses = { months: [] }
   public monthSelect: number
-  public expenses: ExpenseItem[] = [
-    {
-      title: 'Faculdade',
-      dueDate: new Date(10, 3, 10),
-      value: 100.30
-    },
-    {
-      title: 'Toddynho',
-      dueDate: new Date(10, 3, 10),
-      value: 30
-    },
-    {
-      title: 'Gutao',
-      dueDate: new Date(10, 3, 10),
-      value: 10
-    },
-    {
-      title: 'Test',
-      dueDate: new Date(10, 3, 10),
-      value: 1
-    },
-  ]
+  public expenses: ExpenseItem[]
 
-  constructor(private storage: Storage) {
-    this.updateExpensesMonth(this.monthSelect)
+  constructor() {
+    this.expensesMonth = this.generateFakeData()
+    this.getExpensesMonth(this.monthSelect)
   }
 
-  updateExpensesMonth(month: number) {
-    if (month) {
-      this.storage.get(month.toString()).then(value => {
-        console.log(value)
-        this.expenses = value
-      })
+  getExpensesMonth = (month: number) =>
+    (this.expenses = this.expensesMonth.months[month])
+
+  generateFakeData() {
+    const firstMonth = 0
+    const lastMonth = 11
+
+    const monthExpenses: MonthExpenses = { months: [] }
+
+    for (let i = firstMonth; i <= lastMonth; i++) {
+      const newExpense = {
+        title: `Conta do mês: ${i + 1}`,
+        dueDate: new Date(2020, i, 1),
+        value: Math.floor(Math.random() * 100 + 1),
+      }
+
+      monthExpenses.months.push([newExpense])
     }
+
+    return monthExpenses
   }
 }

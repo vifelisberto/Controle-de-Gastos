@@ -1,9 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  OnInit,
-  Output,
-} from '@angular/core'
+import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 
 @Component({
   selector: 'app-month-select',
@@ -31,20 +26,22 @@ export class MonthSelectComponent implements OnInit {
 
   ngOnInit() {
     this.monthSelect = new Date().getMonth()
-    console.log(this.monthSelect)
+    this.emitEventMonth()
   }
+
   changeMonth(nextMonth: boolean) {
     const tempMonth = nextMonth ? this.monthSelect + 1 : this.monthSelect - 1
 
     if (this.validMonth(tempMonth)) {
       this.monthSelect = tempMonth
 
-      this.eventMonth.emit(this.monthSelect)
+      this.emitEventMonth()
     } else {
-      // TODO: Exibir mensagem dizendo que não é possível mais aumentar ou diminuir o mês
       console.log('Limite de data', tempMonth)
     }
   }
+
+  private emitEventMonth = () => this.eventMonth.emit(this.monthSelect)
 
   private validMonth(monthNumber) {
     const minMonth = 0
