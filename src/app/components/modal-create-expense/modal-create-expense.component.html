@@ -1,27 +1,39 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" icon="add"></ion-back-button>
+    </ion-buttons>
     <ion-title>
-      Nova despesa
+        Nova despesa
     </ion-title>
   </ion-toolbar>
-
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <form (ngSubmit)="addNewExpense($event)">
-    <ion-item>
-      <ion-label position="floating">Descrição</ion-label>
+    <ion-item class="padding">
+      <ion-label position="floating">Titulo da despesa</ion-label>
       <ion-input type="text" formControlName="title"></ion-input>
     </ion-item>
-    <ion-item>
+
+    <ion-item class="padding">
       <ion-label position="floating">Valor</ion-label>
       <ion-input type="number" formControlName="value"></ion-input>
     </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Data</ion-label>
-      <ion-datetime formControlName="value" display-timezone="utc"></ion-datetime>
+    <ion-item class="padding">
+      <ion-label position="floating">Data de vencimento</ion-label>
+      <ion-datetime displayFormat="DD/MM/YYYY" formControlName="value" display-timezone="utc"></ion-datetime>
     </ion-item>
-    <ion-button type="submit" [disabled]="this.expense.valid" expand="full">Adicionar Despesa</ion-button>
+
+    <ion-item class="padding">
+      <ion-label position="floating">Repetir despesa</ion-label>
+      <ion-select placeholder="Selecione">
+        <ion-select-option value="repetirSempre">Repetir mensalmente</ion-select-option>
+        <ion-select-option value="naoRepetir">Nao repetir</ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+    <ion-button class="ion-padding" type="submit" [disabled]="this.expense.valid" expand="block" fill="outline">Adicionar Despesa</ion-button>
   </form>
 </ion-content>
