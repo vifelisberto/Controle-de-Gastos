@@ -1,9 +1,22 @@
 <ion-list *ngIf="expenses">
-  <ion-item *ngFor="let expense of expenses">
-    <ion-label slot="start">
-      <ion-row>{{ expense.title }}</ion-row>
-      <ion-row>{{ expense.dueDate | date: 'dd/MM/yyyy'}}</ion-row>
-    </ion-label>
-    <ion-note slot="end">R$ {{ expense.value }}</ion-note>
-  </ion-item>
+  <ion-item-sliding *ngFor="let expense of expenses">
+
+    <ion-item-options side="start">
+      <ion-item-option color="primary" (click)="updateExpense(expense)">
+        <ion-icon slot="icon-only" name="brush"></ion-icon>
+      </ion-item-option>
+      <ion-item-option color="danger">
+        <ion-icon slot="icon-only" name="trash" (click)="confirmDeleteExpense(expense.id)"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+
+    <ion-item>
+      <ion-label slot="start">
+        <ion-row>{{ expense.title }}</ion-row>
+        <ion-row>{{ expense.dueDate | date: 'dd/MM/yyyy'}}</ion-row>
+      </ion-label>
+      <ion-note slot="end">R$ {{ expense.value }}</ion-note>
+    </ion-item>
+
+  </ion-item-sliding>
 </ion-list>

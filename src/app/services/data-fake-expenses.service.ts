@@ -7,7 +7,7 @@ import { MonthExpenses } from '../home/month-expense'
 @Injectable({
   providedIn: 'root',
 })
-export class DataFakeExpensesServiceService {
+export class DataFakeExpensesService {
   public getAllMonthsExpenses = () => dataFake.dataMonthExpenses.months
 
   public getExpensesByMonth = (month: number) =>
@@ -67,8 +67,15 @@ export class DataFakeExpensesServiceService {
   }
 
   public deleteExpense(id: string) {
-    for (let monthExpense of dataFake.dataMonthExpenses.months)
-      monthExpense = monthExpense.filter(expense => expense.id !== id)
+    dataFake.dataMonthExpenses.months.forEach((value, index) => {
+      const existExpense = value.find(expense => expense.id === id)
+
+      if (existExpense) {
+        const indexExistExpense = value.indexOf(existExpense)
+        dataFake.dataMonthExpenses.months[index].splice(indexExistExpense, 1)
+        return
+      }
+    })
   }
 
   private searchExpenseById(id: string) {

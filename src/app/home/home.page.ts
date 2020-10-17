@@ -1,4 +1,4 @@
-import { DataFakeExpensesServiceService as DataFakeExpensesService } from './../services/data-fake-expenses.service'
+import { DataFakeExpensesService } from './../services/data-fake-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
 import { Component } from '@angular/core'
 import { dataFake } from './../../data-fake'
