@@ -18,7 +18,8 @@ import { MenuComponent } from './components/menu/menu.component';
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component';
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component';
 import { ConfigComponent } from './components/config/config.component';
-import { AboutComponent } from './components/about/about.component'
+import { AboutComponent } from './components/about/about.component';
+import { LoginComponent } from './login/login.component'
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { AboutComponent } from './components/about/about.component'
     AnalysisExpensesComponent,
     ConfigComponent,
     AboutComponent,
+    LoginComponent,
   ],
   entryComponents: [],
   imports: [

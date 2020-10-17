@@ -1,4 +1,22 @@
 <ion-app>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start" *ngIf="!isHomePage">
+        <ion-back-button defaultHref="home"></ion-back-button>
+      </ion-buttons>
+
+      <ion-title>
+        Controle de Gastos
+      </ion-title>
+
+      <ion-buttons slot="end" id="mainContent">
+        <ion-menu-button auto-hide="false"></ion-menu-button>
+      </ion-buttons>
+
+    </ion-toolbar>
+  </ion-header>
+
   <app-menu></app-menu>
-  <ion-router-outlet></ion-router-outlet>
+
+  <ion-router-outlet main></ion-router-outlet>
 </ion-app>

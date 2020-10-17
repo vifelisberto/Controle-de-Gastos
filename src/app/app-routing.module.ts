@@ -1,3 +1,4 @@
+import { LoginComponent } from './login/login.component'
 import { ConfigComponent } from './components/config/config.component'
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
 import { AboutComponent } from './components/about/about.component'
@@ -21,6 +22,10 @@ const routes: Routes = [
   {
     path: 'config',
     component: ConfigComponent,
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   },
   {
     path: '',
