@@ -22,7 +22,7 @@ export class ModalCreateExpenseComponent implements OnInit {
 
   addNewExpense(event) {
     event.preventDefault()
-debugger
+
     if (this.validExpense()) {
       const monthNewExpense = this.expense.value.dueDate.getMonth()?.toString()
 
