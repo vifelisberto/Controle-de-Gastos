@@ -13,12 +13,12 @@ import { MonthSelectComponent } from './components/month-select/month-select.com
 import { AddExpenseComponent } from './components/add-expense/add-expense.component'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { IonicStorageModule } from '@ionic/storage';
-import { MenuComponent } from './components/menu/menu.component';
-import { UpdateExpenseComponent } from './components/update-expense/update-expense.component';
-import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component';
-import { ConfigComponent } from './components/config/config.component';
-import { AboutComponent } from './components/about/about.component';
+import { IonicStorageModule } from '@ionic/storage'
+import { MenuComponent } from './components/menu/menu.component'
+import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
+import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
+import { ConfigComponent } from './components/config/config.component'
+import { AboutComponent } from './components/about/about.component'
 import { LoginComponent } from './login/login.component'
 
 @NgModule({

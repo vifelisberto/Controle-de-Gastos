@@ -1,6 +1,7 @@
+import { DataFakeExpensesServiceService as DataFakeExpensesService } from './../services/data-fake-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
 import { Component } from '@angular/core'
-import { MonthExpenses } from './month-expense'
+import { dataFake } from './../../data-fake'
 
 @Component({
   selector: 'app-home',
@@ -8,34 +9,14 @@ import { MonthExpenses } from './month-expense'
   styleUrls: ['home.page.scss'],
 })
 export class HomePageComponent {
-  public expensesMonth: MonthExpenses = { months: [] }
   public monthSelect: number
   public expenses: ExpenseItem[]
 
-  constructor() {
-    this.expensesMonth = this.generateFakeData()
+  constructor(private dataFakeService: DataFakeExpensesService) {
+    dataFake.dataMonthExpenses = this.dataFakeService.generateFakeData()
     this.getExpensesMonth(this.monthSelect)
   }
 
   getExpensesMonth = (month: number) =>
-    (this.expenses = this.expensesMonth.months[month])
-
-  generateFakeData() {
-    const firstMonth = 0
-    const lastMonth = 11
-
-    const monthExpenses: MonthExpenses = { months: [] }
-
-    for (let i = firstMonth; i <= lastMonth; i++) {
-      const newExpense = {
-        title: `Conta do mês: ${i + 1}`,
-        dueDate: new Date(2020, i, 1),
-        value: Math.floor(Math.random() * 100 + 1),
-      }
-
-      monthExpenses.months.push([newExpense])
-    }
-
-    return monthExpenses
-  }
+    (this.expenses = this.dataFakeService.getExpensesByMonth(month))
 }
