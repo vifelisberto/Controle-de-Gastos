@@ -1,6 +1,7 @@
+import { DataFakeExpensesServiceService as DataFakeExpensesService } from './../services/data-fake-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
 import { Component } from '@angular/core'
-import { Storage } from '@ionic/storage'
+import { dataFake } from './../../data-fake'
 
 @Component({
   selector: 'app-home',
@@ -9,39 +10,13 @@ import { Storage } from '@ionic/storage'
 })
 export class HomePageComponent {
   public monthSelect: number
-  public expenses: ExpenseItem[] = [
-    {
-      title: 'Faculdade',
-      dueDate: new Date(10, 3, 10),
-      value: 100.30
-    },
-    {
-      title: 'Toddynho',
-      dueDate: new Date(10, 3, 10),
-      value: 30
-    },
-    {
-      title: 'Gutao',
-      dueDate: new Date(10, 3, 10),
-      value: 10
-    },
-    {
-      title: 'Test',
-      dueDate: new Date(10, 3, 10),
-      value: 1
-    },
-  ]
+  public expenses: ExpenseItem[]
 
-  constructor(private storage: Storage) {
-    this.updateExpensesMonth(this.monthSelect)
+  constructor(private dataFakeService: DataFakeExpensesService) {
+    dataFake.dataMonthExpenses = this.dataFakeService.generateFakeData()
+    this.getExpensesMonth(this.monthSelect)
   }
 
-  updateExpensesMonth(month: number) {
-    if (month) {
-      this.storage.get(month.toString()).then(value => {
-        console.log(value)
-        this.expenses = value
-      })
-    }
-  }
+  getExpensesMonth = (month: number) =>
+    (this.expenses = this.dataFakeService.getExpensesByMonth(month))
 }
