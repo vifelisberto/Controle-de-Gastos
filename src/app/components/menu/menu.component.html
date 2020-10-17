@@ -1,11 +1,14 @@
-<ion-menu side="end" contentId="mainContent">
+<ion-menu side="end" swipeGesture="false" contentId="mainContent">
   <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="tertiary">
       <ion-title>Opções</ion-title>
     </ion-toolbar>
   </ion-header>
-
   <ion-content>
-    Menus
+    <ion-list>
+      <ion-item (click)="closeMenu()" [routerLink]="['/login']">Login</ion-item>
+      <ion-item (click)="closeMenu()" [routerLink]="['/about']">Sobre</ion-item>
+      <ion-item (click)="closeMenu()" [routerLink]="['/config']">Gerenciar Notificações</ion-item>
+    </ion-list>
   </ion-content>
 </ion-menu>
