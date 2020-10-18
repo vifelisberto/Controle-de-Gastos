@@ -1,5 +1,5 @@
 export interface ExpenseItem {
-  id: string
+  id?: string
   title: string
   category: string
   dueDate: Date

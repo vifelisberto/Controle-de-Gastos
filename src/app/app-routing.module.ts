@@ -1,3 +1,4 @@
+import { UpdateExpenseComponent } from './components/update-expense/update-expense.component';
 import { LoginComponent } from './login/login.component'
 import { ConfigComponent } from './components/config/config.component'
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
@@ -26,6 +27,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'update',
+    component: UpdateExpenseComponent,
   },
   {
     path: '',

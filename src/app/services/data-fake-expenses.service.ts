@@ -7,7 +7,7 @@ import { MonthExpenses } from '../home/month-expense'
 @Injectable({
   providedIn: 'root',
 })
-export class DataFakeExpensesServiceService {
+export class DataFakeExpensesService {
   public getAllMonthsExpenses = () => dataFake.dataMonthExpenses.months
 
   public getExpensesByMonth = (month: number) =>
@@ -49,26 +49,37 @@ export class DataFakeExpensesServiceService {
     const firstMonth = 0
     const lastMonth = 11
 
-    const monthExpenses: MonthExpenses = { months: [] }
+    const monthExpenses: MonthExpenses = {
+      months: [[], [], [], [], [], [], [], [], [], [], [], []],
+    }
 
     for (let i = firstMonth; i <= lastMonth; i++) {
-      const newExpense = {
-        id: i.toString(),
-        title: `Conta do mês: ${i + 1}`,
-        category: 'Estudo',
-        dueDate: new Date(2020, i, 1),
-        value: Math.floor(Math.random() * 100 + 1),
-      }
+      for (let j = 0; j < 5; j++) {
+        const newExpense = {
+          id: uuidv4(),
+          title: `Conta do mês: ${i + 1}`,
+          category: 'Estudo',
+          dueDate: new Date(2020, i, 1),
+          value: Math.floor(Math.random() * 100 + 1),
+        }
 
-      monthExpenses.months.push([newExpense])
+        monthExpenses.months[i].push(newExpense)
+      }
     }
 
     return monthExpenses
   }
 
   public deleteExpense(id: string) {
-    for (let monthExpense of dataFake.dataMonthExpenses.months)
-      monthExpense = monthExpense.filter(expense => expense.id !== id)
+    dataFake.dataMonthExpenses.months.forEach((value, index) => {
+      const existExpense = value.find(expense => expense.id === id)
+
+      if (existExpense) {
+        const indexExistExpense = value.indexOf(existExpense)
+        dataFake.dataMonthExpenses.months[index].splice(indexExistExpense, 1)
+        return
+      }
+    })
   }
 
   private searchExpenseById(id: string) {
