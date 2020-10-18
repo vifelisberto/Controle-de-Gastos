@@ -53,11 +53,13 @@ export class DataFakeExpensesService {
       months: [[], [], [], [], [], [], [], [], [], [], [], []],
     }
 
+    const expensesRandom = ['Faculdade', 'Lanche', 'Roupa', 'PS5', 'PC', 'Skol']
+
     for (let i = firstMonth; i <= lastMonth; i++) {
       for (let j = 0; j < 5; j++) {
         const newExpense = {
           id: uuidv4(),
-          title: `Conta do mês: ${i + 1}`,
+          title: expensesRandom[Math.floor(Math.random() * 6)],
           category: 'Estudo',
           dueDate: new Date(2020, i, 1),
           value: Math.floor(Math.random() * 100 + 1),
