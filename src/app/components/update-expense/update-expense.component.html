@@ -1,13 +1,24 @@
 <ion-content [fullscreen]="true">
-  <form [formGroup]="expense">
+  <form [formGroup]="expense" (ngSubmit)="updateExpense()">
+    <!-- <ion-input type="hidden" formControlName="id" required="true"></ion-input> -->
+
     <ion-item class="padding">
       <ion-label position="floating">Titulo da despesa</ion-label>
-      <ion-input type="text" formControlName="title"></ion-input>
+      <ion-input
+        type="text"
+        formControlName="title"
+        required="true"
+      ></ion-input>
     </ion-item>
 
     <ion-item class="padding">
       <ion-label position="floating">Valor</ion-label>
-      <ion-input type="number" formControlName="value"></ion-input>
+      <ion-input
+        type="number"
+        inputmode="tel"
+        formControlName="value"
+        required="true"
+      ></ion-input>
     </ion-item>
 
     <ion-item class="padding">
@@ -16,12 +27,14 @@
         displayFormat="DD/MM/YYYY"
         formControlName="dueDate"
         display-timezone="utc"
-      ></ion-datetime>
+        required="true"
+      >
+      </ion-datetime>
     </ion-item>
 
     <ion-item class="padding">
       <ion-label position="floating">Categoria</ion-label>
-      <ion-select formControlName="category">
+      <ion-select formControlName="category" required="true">
         <ion-select-option value="1">Educação</ion-select-option>
         <ion-select-option value="2">Lazer</ion-select-option>
         <ion-select-option value="3">Alimentação</ion-select-option>
@@ -34,7 +47,11 @@
 
     <ion-item class="padding">
       <ion-label position="floating">Repetir despesa</ion-label>
-      <ion-select formControlName="repeat">
+      <ion-select
+        formControlName="repeat"
+        (ionChange)="openSelectPlots()"
+        required="true"
+      >
         <ion-select-option value="1">Não repetir</ion-select-option>
         <ion-select-option value="2">Mensalmente</ion-select-option>
         <ion-select-option value="3">Parcelas</ion-select-option>
@@ -44,11 +61,11 @@
     <ion-button
       class="ion-padding"
       type="submit"
-      [disabled]="this.expense.valid"
+      [disabled]="!this.expense.valid"
       expand="block"
       fill="outline"
     >
-      Adicionar Despesa</ion-button
+      Alterar Despesa</ion-button
     >
   </form>
 </ion-content>

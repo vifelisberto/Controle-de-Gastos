@@ -1,55 +1,81 @@
+import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
 import { ExpenseItem } from './../expense-items/expense-item'
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
+import { repeat } from 'src/data-fake'
 
 @Component({
   selector: 'app-update-expense',
   templateUrl: './update-expense.component.html',
   styleUrls: ['./update-expense.component.css'],
 })
-export class UpdateExpenseComponent {
+export class UpdateExpenseComponent implements OnInit {
   public itemUpdate: ExpenseItem
-  public expense: FormGroup
   public currentPortion: string
 
-  constructor(
-    private router: Router,
-    private formBuilder: FormBuilder,
-    public alertController: AlertController,
-  ) {
-    this.itemUpdate = this.router.getCurrentNavigation().extras.state.data
+  public expense = this.formBuilder.group({
+    id: ['', Validators.required],
+    title: ['', Validators.required],
+    value: ['', Validators.required],
+    dueDate: ['', Validators.required],
+    category: [''],
+    repeat: ['', Validators.required],
+  })
 
-    this.expense = this.formBuilder.group({
-      title: ['', Validators.required],
-      value: ['', Validators.required],
-      dueDate: ['', Validators.required],
-      category: [''],
-      repeat: ['', Validators.required],
-    })
-    this.expense.setValue({
-      title: this.itemUpdate.title,
-      value: this.itemUpdate.value,
-      dueDate: this.itemUpdate.dueDate.toDateString(),
-      category: this.itemUpdate.category.toString(),
-      repeat: this.itemUpdate.repeat.toString(),
-    })
+  constructor(
+    public alertController: AlertController,
+    private dataFakeExpensesService: DataFakeExpensesService,
+    private formBuilder: FormBuilder,
+    private router: Router,
+  ) {}
+
+  ngOnInit() {
+    this.itemUpdate = this.router.getCurrentNavigation().extras.state?.data
+
+    if (this.itemUpdate)
+      this.expense.setValue({
+        id: this.itemUpdate?.id,
+        title: this.itemUpdate.title,
+        value: this.itemUpdate.value,
+        dueDate: this.itemUpdate.dueDate.toDateString(),
+        category: this.itemUpdate.category.toString(),
+        repeat: this.itemUpdate.repeat.toString(),
+      })
+    else this.router.navigate(['/home'])
   }
 
-  selectChanged(selectedRepeat) {
-    if (selectedRepeat === 'portion') {
+  openSelectPlots() {
+    if (this.expense.value.repeat === repeat.portion) {
       this.inputCustomPortionValue()
-    } else {
-      this.currentPortion = selectedRepeat
     }
   }
 
-  async inputCustomPortionValue() {
+  async updateExpense() {
+    console.log('submit', this.expense)
+    if (this.expense.valid) {
+      if (this.dataFakeExpensesService.updateExpense(this.expense.value))
+        this.router.navigate(['/home'])
+      else await this.alertMessageInvalidData()
+    } else {
+      console.log('Dados inválidos')
+    }
+  }
+
+  private async inputCustomPortionValue() {
     const inputAlert = await this.alertController.create({
       header: 'Qual o número de parcelas?',
       inputs: [{ type: 'text', placeholder: 'Parcelas' }],
       buttons: [{ text: 'Cancelar' }, { text: 'Ok' }],
+    })
+    await inputAlert.present()
+  }
+
+  private async alertMessageInvalidData() {
+    const inputAlert = await this.alertController.create({
+      header: 'Erro ao cadastrar, por favor tente novamente',
+      buttons: [{ text: 'Ok' }],
     })
     await inputAlert.present()
   }

@@ -34,7 +34,18 @@ export class CreateExpenseComponent {
     }
   }
 
-  async inputCustomPortionValue() {
+  async addNewExpense() {
+    console.log('submit', this.expense)
+    if (this.expense.valid) {
+      if (this.dataFakeExpensesService.addExpense(this.expense.value))
+        this.router.navigate(['/home'])
+      else await this.alertMessageInvalidData()
+    } else {
+      console.log('Dados inválidos')
+    }
+  }
+
+  private async inputCustomPortionValue() {
     const inputAlert = await this.alertController.create({
       header: 'Qual o número de parcelas?',
       inputs: [{ type: 'text', placeholder: 'Parcelas' }],
@@ -43,14 +54,11 @@ export class CreateExpenseComponent {
     await inputAlert.present()
   }
 
-  addNewExpense() {
-    console.log('submit', this.expense)
-    if (this.expense.valid) {
-      this.dataFakeExpensesService.addExpense(this.expense.value)
-
-      this.router.navigate(['/home'])
-    } else {
-      console.log('Dados inválidos')
-    }
+  private async alertMessageInvalidData() {
+    const inputAlert = await this.alertController.create({
+      header: 'Erro ao cadastrar, por favor tente novamente',
+      buttons: [{ text: 'Ok' }],
+    })
+    await inputAlert.present()
   }
 }
