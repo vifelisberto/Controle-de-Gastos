@@ -1,11 +1,13 @@
 <ion-content>
   <ion-item>
     <ion-label>Contas proximas a vencer</ion-label>
-    <ion-toggle slot="start" name="vencer" color="success" checked></ion-toggle>
+    <ion-toggle [(ngModel)]="notOverdue" (ngModelChange)="changeNotOverdueNotification()" slot="end" name="vencer"
+      color="success" checked></ion-toggle>
   </ion-item>
 
   <ion-item>
     <ion-label>Contas vencidas</ion-label>
-    <ion-toggle slot="start" name="vencida" color="success" checked></ion-toggle>
+    <ion-toggle [(ngModel)]="overdue" (ngModelChange)="changeOverdueNotification()" slot="end" name="vencida"
+      color="success" checked></ion-toggle>
   </ion-item>
 </ion-content>
