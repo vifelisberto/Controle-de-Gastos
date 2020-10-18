@@ -31,6 +31,9 @@ export class ExpenseItemsComponent implements OnChanges {
       buttons: [
         {
           text: 'Cancelar',
+          handler: () => {
+            // console.log(event)
+          },
         },
         {
           text: 'Excluir',
