@@ -1,4 +1,11 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { DOCUMENT } from '@angular/common'
+import {
+  Component,
+  Inject,
+  Input,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController } from '@ionic/angular'
 import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
@@ -16,13 +23,19 @@ export class ExpenseItemsComponent implements OnChanges {
     private alertController: AlertController,
     private dataFakeService: DataFakeExpensesService,
     private router: Router,
+    @Inject(DOCUMENT) document,
   ) {}
 
-  ngOnChanges = (changes: SimpleChanges) =>
-    (this.expenses = changes.expenses.currentValue)
+  ngOnChanges(changes: SimpleChanges) {
+    this.expenses = changes.expenses.currentValue
+  }
 
   updateExpense = (expense: ExpenseItem) =>
     this.router.navigate(['/update'], { state: { data: expense } })
+
+  confirmPaymentExpense(paid: SimpleChanges) {
+    document.getElementById(paid).style.color = 'green'
+  }
 
   async confirmDeleteExpense(id: string) {
     const alert = await this.alertController.create({
