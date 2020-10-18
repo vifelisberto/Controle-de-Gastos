@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { dataFake } from 'src/data-fake'
+import { category, dataFake, repeat } from 'src/data-fake'
 import { ExpenseItem } from '../components/expense-items/expense-item'
 import { v4 as uuidv4 } from 'uuid'
 import { MonthExpenses } from '../home/month-expense'
@@ -60,9 +60,10 @@ export class DataFakeExpensesService {
         const newExpense = {
           id: uuidv4(),
           title: expensesRandom[Math.floor(Math.random() * 6)],
-          category: 'Estudo',
+          category: category.cheers,
           dueDate: new Date(2020, i, 1),
           value: Math.floor(Math.random() * 100 + 1),
+          repeat: repeat.monthly
         }
 
         monthExpenses.months[i].push(newExpense)
