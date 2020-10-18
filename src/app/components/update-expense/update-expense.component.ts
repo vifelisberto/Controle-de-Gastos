@@ -3,7 +3,7 @@ import { ExpenseItem } from './../expense-items/expense-item'
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { FormBuilder, Validators } from '@angular/forms'
-import { AlertController } from '@ionic/angular'
+import { AlertController, ToastController } from '@ionic/angular'
 import { repeat } from 'src/data-fake'
 
 @Component({
@@ -29,6 +29,7 @@ export class UpdateExpenseComponent implements OnInit {
     private dataFakeExpensesService: DataFakeExpensesService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private toastController: ToastController,
   ) {}
 
   ngOnInit() {
@@ -55,12 +56,21 @@ export class UpdateExpenseComponent implements OnInit {
   async updateExpense() {
     console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataFakeExpensesService.updateExpense(this.expense.value))
+      if (this.dataFakeExpensesService.updateExpense(this.expense.value)) {
+        this.toastSuccess()
         this.router.navigate(['/home'])
-      else await this.alertMessageInvalidData()
+      } else await this.alertMessageInvalidData()
     } else {
       console.log('Dados inválidos')
     }
+  }
+
+  async toastSuccess() {
+    const toast = await this.toastController.create({
+      message: 'Despesa alterada com sucesso!',
+      duration: 1000,
+    })
+    toast.present()
   }
 
   private async inputCustomPortionValue() {

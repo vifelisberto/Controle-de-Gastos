@@ -8,6 +8,10 @@
 
 <ion-footer>
   <ion-toolbar color="translucent">
+    <ion-title class="total"
+      >Total Mês: {{ getSumAllExpenses() | currency: 'BRL' }}</ion-title
+    >
+
     <ion-buttons slot="end">
       <ion-button (click)="createExpensePage()">
         <ion-icon slot="icon-only" name="add"></ion-icon>
