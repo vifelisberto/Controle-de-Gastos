@@ -4,6 +4,7 @@ import { Component } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 import { Router } from '@angular/router'
+import { ToastController } from '@ionic/angular'
 
 @Component({
   selector: 'app-create-expense',
@@ -26,6 +27,7 @@ export class CreateExpenseComponent {
     private formBuilder: FormBuilder,
     private router: Router,
     private dataFakeExpensesService: DataFakeExpensesService,
+    private toastController: ToastController,
   ) {}
 
   openSelectPlots() {
@@ -37,12 +39,21 @@ export class CreateExpenseComponent {
   async addNewExpense() {
     console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataFakeExpensesService.addExpense(this.expense.value))
+      if (this.dataFakeExpensesService.addExpense(this.expense.value)) {
+        this.toastSuccess()
         this.router.navigate(['/home'])
-      else await this.alertMessageInvalidData()
+      } else await this.alertMessageInvalidData()
     } else {
       console.log('Dados inválidos')
     }
+  }
+
+  async toastSuccess() {
+    const toast = await this.toastController.create({
+      message: 'Nova despesa cadastrada com sucesso!',
+      duration: 1000,
+    })
+    toast.present()
   }
 
   private async inputCustomPortionValue() {

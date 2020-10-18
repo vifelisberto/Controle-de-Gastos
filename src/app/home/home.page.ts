@@ -21,8 +21,19 @@ export class HomePageComponent {
     this.getExpensesMonth(this.monthSelect)
   }
 
-  getExpensesMonth = (month: number) =>
-    (this.expenses = this.dataFakeService.getExpensesByMonth(month))
+  getExpensesMonth(month: number) {
+    this.expenses = this.dataFakeService.getExpensesByMonth(month) || []
+  }
 
   createExpensePage = () => this.router.navigate(['/create'])
+
+  getSumAllExpenses() {
+    if (this.expenses) {
+      return this.expenses
+        ?.filter(expense => expense.value)
+        ?.reduce((sum, x) => sum + x.value, 0.0)
+    }
+
+    return 0.0
+  }
 }
