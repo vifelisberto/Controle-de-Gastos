@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { Storage } from '@ionic/storage'
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-modal-create-expense',
@@ -9,8 +10,9 @@ import { Storage } from '@ionic/storage'
 })
 export class ModalCreateExpenseComponent implements OnInit {
   public expense: FormGroup
+  public currentPortion: string;
 
-  constructor(private formBuilder: FormBuilder, private storage: Storage) {
+  constructor(private formBuilder: FormBuilder, private storage: Storage, public alertController: AlertController) {
     this.expense = this.formBuilder.group({
       title: ['', Validators.required],
       value: ['', Validators.required],
@@ -19,6 +21,23 @@ export class ModalCreateExpenseComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  selectChanged(selectedRepeat) {
+    if (selectedRepeat === 'portion') {
+      this.inputCustomPortionValue()
+    } else {
+      this.currentPortion = selectedRepeat;
+    };
+  };
+
+  async inputCustomPortionValue() {
+    const inputAlert = await this.alertController.create({
+      header: 'Qual o número de parcelas?',
+      inputs: [ { type: 'text', placeholder: 'Parcelas' } ],
+      buttons: [ { text: 'Cancelar' }, { text: 'Ok' } ]
+    });
+    await inputAlert.present();
+  };
 
   addNewExpense(event) {
     event.preventDefault()

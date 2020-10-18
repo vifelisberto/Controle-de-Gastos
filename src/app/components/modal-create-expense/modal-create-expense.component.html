@@ -28,9 +28,10 @@
 
     <ion-item class="padding">
       <ion-label position="floating">Repetir despesa</ion-label>
-      <ion-select placeholder="Selecione">
-        <ion-select-option value="repetirSempre">Repetir mensalmente</ion-select-option>
-        <ion-select-option value="naoRepetir">Nao repetir</ion-select-option>
+      <ion-select #mySelect [value]="currentPortion" [selectedText]="currentPortion" (ionChange)="selectChanged(mySelect.value)">
+        <ion-select-option value="notRepeat">Não repetir</ion-select-option>
+        <ion-select-option value="monthly">Mensalmente</ion-select-option>
+        <ion-select-option value="portion">Parcelas</ion-select-option>
       </ion-select>
     </ion-item>
     
