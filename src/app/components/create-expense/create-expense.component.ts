@@ -1,50 +1,32 @@
 import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
-import { ExpenseItem } from './../expense-items/expense-item'
-import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
+import { repeat } from './../../../data-fake'
+import { Component } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
-import { repeat } from 'src/data-fake'
+import { Router } from '@angular/router'
 
 @Component({
-  selector: 'app-update-expense',
-  templateUrl: './update-expense.component.html',
-  styleUrls: ['./update-expense.component.css'],
+  selector: 'app-create-expense',
+  templateUrl: './create-expense.component.html',
+  styleUrls: ['./create-expense.component.css'],
 })
-export class UpdateExpenseComponent implements OnInit {
-  public itemUpdate: ExpenseItem
+export class CreateExpenseComponent {
   public currentPortion: string
 
   public expense = this.formBuilder.group({
-    id: ['', Validators.required],
     title: ['', Validators.required],
     value: ['', Validators.required],
     dueDate: ['', Validators.required],
     category: [''],
-    repeat: ['', Validators.required],
+    repeat: [''],
   })
 
   constructor(
     public alertController: AlertController,
-    private dataFakeExpensesService: DataFakeExpensesService,
     private formBuilder: FormBuilder,
     private router: Router,
+    private dataFakeExpensesService: DataFakeExpensesService,
   ) {}
-
-  ngOnInit() {
-    this.itemUpdate = this.router.getCurrentNavigation().extras.state?.data
-
-    if (this.itemUpdate)
-      this.expense.setValue({
-        id: this.itemUpdate?.id,
-        title: this.itemUpdate.title,
-        value: this.itemUpdate.value,
-        dueDate: this.itemUpdate.dueDate.toDateString(),
-        category: this.itemUpdate.category.toString(),
-        repeat: this.itemUpdate.repeat.toString(),
-      })
-    else this.router.navigate(['/home'])
-  }
 
   openSelectPlots() {
     if (this.expense.value.repeat === repeat.portion) {
@@ -52,10 +34,10 @@ export class UpdateExpenseComponent implements OnInit {
     }
   }
 
-  async updateExpense() {
+  async addNewExpense() {
     console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataFakeExpensesService.updateExpense(this.expense.value))
+      if (this.dataFakeExpensesService.addExpense(this.expense.value))
         this.router.navigate(['/home'])
       else await this.alertMessageInvalidData()
     } else {

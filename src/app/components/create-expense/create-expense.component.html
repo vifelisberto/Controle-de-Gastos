@@ -1,11 +1,12 @@
 <ion-content [fullscreen]="true">
-  <form [formGroup]="expense" (ngSubmit)="updateExpense()">
+  <form [formGroup]="expense" (ngSubmit)="addNewExpense()">
     <ion-item class="padding">
       <ion-label position="floating">Titulo da despesa</ion-label>
       <ion-input
         type="text"
         formControlName="title"
         required="true"
+        autofocus="true"
       ></ion-input>
     </ion-item>
 
@@ -63,7 +64,7 @@
       expand="block"
       fill="outline"
     >
-      Alterar Despesa</ion-button
+      Adicionar Despesa</ion-button
     >
   </form>
 </ion-content>

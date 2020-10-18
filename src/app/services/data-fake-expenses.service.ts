@@ -1,3 +1,4 @@
+import { filter } from 'rxjs/operators'
 import { Injectable } from '@angular/core'
 import { category, dataFake, repeat } from 'src/data-fake'
 import { ExpenseItem } from '../components/expense-items/expense-item'
@@ -17,7 +18,7 @@ export class DataFakeExpensesService {
 
   public addExpense(expense: ExpenseItem): boolean {
     if (this.validExpense(expense)) {
-      const monthNewExpense = expense.dueDate.getMonth().toString()
+      const monthNewExpense = this.getNumberMonthString(expense.dueDate)
 
       expense.id = uuidv4()
       dataFake.dataMonthExpenses.months[monthNewExpense].push(expense)
@@ -29,20 +30,23 @@ export class DataFakeExpensesService {
     return false
   }
 
-  public updateExpense(expense: ExpenseItem): ExpenseItem {
-    const monthExpense = expense.dueDate.getMonth().toString()
+  public updateExpense(newExpense: ExpenseItem) {
+    const monthExpense = this.getNumberMonthString(newExpense.dueDate)
 
-    let expenseExisting = dataFake.dataMonthExpenses.months[monthExpense]?.find(
-      x => x.id === expense.id,
-    )
+    const expenseExisting = dataFake.dataMonthExpenses.months[
+      monthExpense
+    ]?.find(x => x.id === newExpense.id)
 
     if (expenseExisting) {
-      expenseExisting = expense
+      const indexItem = dataFake.dataMonthExpenses.months[monthExpense].indexOf(
+        expenseExisting,
+      )
+      dataFake.dataMonthExpenses.months[monthExpense][indexItem] = newExpense
+
+      return true
     }
 
-    // TODO: Verificar se ele altera por referencia ou se será necessario excluir e inserir novamente
-
-    return expenseExisting
+    return false
   }
 
   public generateFakeData() {
@@ -63,7 +67,7 @@ export class DataFakeExpensesService {
           category: category.cheers,
           dueDate: new Date(2020, i, 1),
           value: Math.floor(Math.random() * 100 + 1),
-          repeat: repeat.monthly
+          repeat: repeat.monthly,
         }
 
         monthExpenses.months[i].push(newExpense)
@@ -92,4 +96,7 @@ export class DataFakeExpensesService {
 
   private validExpense = (expense: ExpenseItem) =>
     expense && expense.title && expense.dueDate && expense.value
+
+  private getNumberMonthString = (date: Date) =>
+    new Date(date).getMonth().toString()
 }
