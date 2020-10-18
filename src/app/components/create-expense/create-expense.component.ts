@@ -1,4 +1,3 @@
-import { category } from './../../../data-fake'
 import { Component } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'

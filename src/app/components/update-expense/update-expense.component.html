@@ -1,11 +1,3 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-        Editar despesa
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <form [formGroup]="expense">
     <ion-item class="padding">
@@ -20,7 +12,11 @@
 
     <ion-item class="padding">
       <ion-label position="floating">Data de vencimento</ion-label>
-      <ion-datetime displayFormat="DD/MM/YYYY" formControlName="dueDate" display-timezone="utc"></ion-datetime>
+      <ion-datetime
+        displayFormat="DD/MM/YYYY"
+        formControlName="dueDate"
+        display-timezone="utc"
+      ></ion-datetime>
     </ion-item>
 
     <ion-item class="padding">
@@ -38,16 +34,27 @@
 
     <ion-item class="padding">
       <ion-label position="floating">Repetir despesa</ion-label>
-      <ion-select formControlName="repeat" #mySelect [value]="currentPortion" [selectedText]="currentPortion" (ionChange)="selectChanged(mySelect.value)">
+      <ion-select
+        formControlName="repeat"
+        #mySelect
+        [value]="currentPortion"
+        [selectedText]="currentPortion"
+        (ionChange)="selectChanged(mySelect.value)"
+      >
         <ion-select-option value="1">Não repetir</ion-select-option>
         <ion-select-option value="2">Mensalmente</ion-select-option>
         <ion-select-option value="3">Parcelas</ion-select-option>
       </ion-select>
     </ion-item>
-    
-    <ion-button class="ion-padding" type="submit" [disabled]="this.expense.valid" expand="block" fill="outline">Adicionar Despesa</ion-button>
+
+    <ion-button
+      class="ion-padding"
+      type="submit"
+      [disabled]="this.expense.valid"
+      expand="block"
+      fill="outline"
+    >
+      Adicionar Despesa</ion-button
+    >
   </form>
-  <ion-text>{{ itemUpdate | json }}</ion-text>
-</ion-content> 
-
-
+</ion-content>

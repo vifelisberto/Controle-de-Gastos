@@ -1,5 +1,5 @@
 <ion-content [fullscreen]="true">
-  <form (ngSubmit)="addNewExpense($event)">
+  <form (ngSubmit)="addNewExpense($event)" [formGroup]="expense">
     <ion-item class="padding">
       <ion-label position="floating">Titulo da despesa</ion-label>
       <ion-input type="text" formControlName="title"></ion-input>
@@ -14,7 +14,7 @@
       <ion-label position="floating">Data de vencimento</ion-label>
       <ion-datetime
         displayFormat="DD/MM/YYYY"
-        formControlName="value"
+        formControlName="dueDate"
         display-timezone="utc"
       ></ion-datetime>
     </ion-item>
@@ -35,14 +35,15 @@
     <ion-item class="padding">
       <ion-label position="floating">Repetir despesa</ion-label>
       <ion-select
+        formControlName="repeat"
         #mySelect
         [value]="currentPortion"
         [selectedText]="currentPortion"
         (ionChange)="selectChanged(mySelect.value)"
       >
-        <ion-select-option value="notRepeat">Não repetir</ion-select-option>
-        <ion-select-option value="monthly">Mensalmente</ion-select-option>
-        <ion-select-option value="portion">Parcelas</ion-select-option>
+        <ion-select-option value="1">Não repetir</ion-select-option>
+        <ion-select-option value="2">Mensalmente</ion-select-option>
+        <ion-select-option value="3">Parcelas</ion-select-option>
       </ion-select>
     </ion-item>
 
