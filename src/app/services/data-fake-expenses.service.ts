@@ -17,7 +17,7 @@ export class DataFakeExpensesService {
 
   public addExpense(expense: ExpenseItem): boolean {
     if (this.validExpense(expense)) {
-      const monthNewExpense = expense.dueDate.getMonth().toString()
+      const monthNewExpense = new Date(expense.dueDate).getMonth().toString()
 
       expense.id = uuidv4()
       dataFake.dataMonthExpenses.months[monthNewExpense].push(expense)
@@ -63,7 +63,7 @@ export class DataFakeExpensesService {
           category: category.cheers,
           dueDate: new Date(2020, i, 1),
           value: Math.floor(Math.random() * 100 + 1),
-          repeat: repeat.monthly
+          repeat: repeat.monthly,
         }
 
         monthExpenses.months[i].push(newExpense)

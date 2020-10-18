@@ -1,6 +1,9 @@
+import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
+import { repeat } from './../../../data-fake'
 import { Component } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms'
+import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-create-expense',
@@ -8,27 +11,26 @@ import { AlertController } from '@ionic/angular'
   styleUrls: ['./create-expense.component.css'],
 })
 export class CreateExpenseComponent {
-  public expense: FormGroup
   public currentPortion: string
 
-  constructor(
-    private formBuilder: FormBuilder,
-    public alertController: AlertController,
-  ) {
-    this.expense = this.formBuilder.group({
-      title: ['', Validators.required],
-      value: ['', Validators.required],
-      dueDate: ['', Validators.required],
-      category: [''],
-      repeat: [''],
-    })
-  }
+  public expense = this.formBuilder.group({
+    title: ['', Validators.required],
+    value: ['', Validators.required],
+    dueDate: ['', Validators.required],
+    category: [''],
+    repeat: [''],
+  })
 
-  selectChanged(selectedRepeat) {
-    if (selectedRepeat === 'portion') {
+  constructor(
+    public alertController: AlertController,
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private dataFakeExpensesService: DataFakeExpensesService,
+  ) {}
+
+  openSelectPlots() {
+    if (this.expense.value.repeat === repeat.portion) {
       this.inputCustomPortionValue()
-    } else {
-      this.currentPortion = selectedRepeat
     }
   }
 
@@ -41,28 +43,14 @@ export class CreateExpenseComponent {
     await inputAlert.present()
   }
 
-  addNewExpense(event) {
-    event.preventDefault()
+  addNewExpense() {
+    console.log('submit', this.expense)
+    if (this.expense.valid) {
+      this.dataFakeExpensesService.addExpense(this.expense.value)
 
-    // if (this.validExpense()) {
-    //   const monthNewExpense = this.expense.value.dueDate.getMonth()?.toString()
-
-    //   this.storage.get(monthNewExpense).then(valueStr => {
-    //     let value = JSON.parse(valueStr)
-
-    //     if (value) {
-    //       value.push(this.expense.value)
-    //     } else {
-    //       value = [this.expense.value]
-    //     }
-
-    //     this.storage.set(monthNewExpense, JSON.stringify(value))
-    //   })
-    // } else {
-    //   console.log('Dados inválidos')
-    // }
+      this.router.navigate(['/home'])
+    } else {
+      console.log('Dados inválidos')
+    }
   }
-
-  private validExpense = () =>
-    this.expense.value.title && this.expense.value.dueDate && this.expense.value
 }

@@ -34,13 +34,7 @@
 
     <ion-item class="padding">
       <ion-label position="floating">Repetir despesa</ion-label>
-      <ion-select
-        formControlName="repeat"
-        #mySelect
-        [value]="currentPortion"
-        [selectedText]="currentPortion"
-        (ionChange)="selectChanged(mySelect.value)"
-      >
+      <ion-select formControlName="repeat">
         <ion-select-option value="1">Não repetir</ion-select-option>
         <ion-select-option value="2">Mensalmente</ion-select-option>
         <ion-select-option value="3">Parcelas</ion-select-option>
