@@ -1,0 +1,59 @@
+<ion-content [fullscreen]="true">
+  <form (ngSubmit)="addNewExpense($event)">
+    <ion-item class="padding">
+      <ion-label position="floating">Titulo da despesa</ion-label>
+      <ion-input type="text" formControlName="title"></ion-input>
+    </ion-item>
+
+    <ion-item class="padding">
+      <ion-label position="floating">Valor</ion-label>
+      <ion-input type="number" formControlName="value"></ion-input>
+    </ion-item>
+
+    <ion-item class="padding">
+      <ion-label position="floating">Data de vencimento</ion-label>
+      <ion-datetime
+        displayFormat="DD/MM/YYYY"
+        formControlName="value"
+        display-timezone="utc"
+      ></ion-datetime>
+    </ion-item>
+
+    <ion-item class="padding">
+      <ion-label position="floating">Categoria</ion-label>
+      <ion-select formControlName="category">
+        <ion-select-option value="1">Educação</ion-select-option>
+        <ion-select-option value="2">Lazer</ion-select-option>
+        <ion-select-option value="3">Alimentação</ion-select-option>
+        <ion-select-option value="4">Transporte</ion-select-option>
+        <ion-select-option value="5">Saúde</ion-select-option>
+        <ion-select-option value="6">Despesas domésticas</ion-select-option>
+        <ion-select-option value="7">Outros</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item class="padding">
+      <ion-label position="floating">Repetir despesa</ion-label>
+      <ion-select
+        #mySelect
+        [value]="currentPortion"
+        [selectedText]="currentPortion"
+        (ionChange)="selectChanged(mySelect.value)"
+      >
+        <ion-select-option value="notRepeat">Não repetir</ion-select-option>
+        <ion-select-option value="monthly">Mensalmente</ion-select-option>
+        <ion-select-option value="portion">Parcelas</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-button
+      class="ion-padding"
+      type="submit"
+      [disabled]="this.expense.valid"
+      expand="block"
+      fill="outline"
+    >
+      Adicionar Despesa</ion-button
+    >
+  </form>
+</ion-content>

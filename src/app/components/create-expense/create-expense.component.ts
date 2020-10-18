@@ -1,39 +1,27 @@
-import { ExpenseItem } from './../expense-items/expense-item'
+import { category } from './../../../data-fake'
 import { Component } from '@angular/core'
-import { Router } from '@angular/router'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 
 @Component({
-  selector: 'app-update-expense',
-  templateUrl: './update-expense.component.html',
-  styleUrls: ['./update-expense.component.css'],
+  selector: 'app-create-expense',
+  templateUrl: './create-expense.component.html',
+  styleUrls: ['./create-expense.component.css'],
 })
-export class UpdateExpenseComponent {
-  public itemUpdate: ExpenseItem
+export class CreateExpenseComponent {
   public expense: FormGroup
   public currentPortion: string
 
   constructor(
-    private router: Router,
     private formBuilder: FormBuilder,
     public alertController: AlertController,
   ) {
-    this.itemUpdate = this.router.getCurrentNavigation().extras.state.data
-
     this.expense = this.formBuilder.group({
       title: ['', Validators.required],
       value: ['', Validators.required],
       dueDate: ['', Validators.required],
       category: [''],
-      repeat: ['', Validators.required],
-    })
-    this.expense.setValue({
-      title: this.itemUpdate.title,
-      value: this.itemUpdate.value,
-      dueDate: this.itemUpdate.dueDate.toDateString(),
-      category: this.itemUpdate.category.toString(),
-      repeat: this.itemUpdate.repeat.toString(),
+      repeat: [''],
     })
   }
 
@@ -53,4 +41,29 @@ export class UpdateExpenseComponent {
     })
     await inputAlert.present()
   }
+
+  addNewExpense(event) {
+    event.preventDefault()
+
+    // if (this.validExpense()) {
+    //   const monthNewExpense = this.expense.value.dueDate.getMonth()?.toString()
+
+    //   this.storage.get(monthNewExpense).then(valueStr => {
+    //     let value = JSON.parse(valueStr)
+
+    //     if (value) {
+    //       value.push(this.expense.value)
+    //     } else {
+    //       value = [this.expense.value]
+    //     }
+
+    //     this.storage.set(monthNewExpense, JSON.stringify(value))
+    //   })
+    // } else {
+    //   console.log('Dados inválidos')
+    // }
+  }
+
+  private validExpense = () =>
+    this.expense.value.title && this.expense.value.dueDate && this.expense.value
 }

@@ -6,4 +6,12 @@
   <app-expense-items *ngIf="expenses" [expenses]="expenses"></app-expense-items>
 </ion-content>
 
-<app-add-expense></app-add-expense>
+<ion-footer>
+  <ion-toolbar color="translucent">
+    <ion-buttons slot="end">
+      <ion-button (click)="createExpensePage()">
+        <ion-icon slot="icon-only" name="add"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

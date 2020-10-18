@@ -6,14 +6,12 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import { AppComponent } from './app.component'
 import { AppRoutingModule } from './app-routing.module'
-import { ModalCreateExpenseComponent } from './components/modal-create-expense/modal-create-expense.component'
+import { CreateExpenseComponent } from './components/create-expense/create-expense.component'
 import { HomePageComponent } from './home/home.page'
 import { ExpenseItemsComponent } from './components/expense-items/expense-items.component'
 import { MonthSelectComponent } from './components/month-select/month-select.component'
-import { AddExpenseComponent } from './components/add-expense/add-expense.component'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { IonicStorageModule } from '@ionic/storage'
 import { MenuComponent } from './components/menu/menu.component'
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
@@ -24,11 +22,10 @@ import { LoginComponent } from './login/login.component'
 @NgModule({
   declarations: [
     AppComponent,
-    ModalCreateExpenseComponent,
+    CreateExpenseComponent,
     HomePageComponent,
     ExpenseItemsComponent,
     MonthSelectComponent,
-    AddExpenseComponent,
     MenuComponent,
     UpdateExpenseComponent,
     AnalysisExpensesComponent,
@@ -43,7 +40,6 @@ import { LoginComponent } from './login/login.component'
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
-    IonicStorageModule.forRoot(),
     ReactiveFormsModule,
   ],
   providers: [
