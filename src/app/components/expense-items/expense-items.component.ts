@@ -1,11 +1,4 @@
-import { DOCUMENT } from '@angular/common'
-import {
-  Component,
-  Inject,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core'
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController } from '@ionic/angular'
 import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
@@ -23,7 +16,6 @@ export class ExpenseItemsComponent implements OnChanges {
     private alertController: AlertController,
     private dataFakeService: DataFakeExpensesService,
     private router: Router,
-    @Inject(DOCUMENT) document,
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -32,10 +24,6 @@ export class ExpenseItemsComponent implements OnChanges {
 
   updateExpense = (expense: ExpenseItem) =>
     this.router.navigate(['/update'], { state: { data: expense } })
-
-  confirmPaymentExpense(paid: SimpleChanges) {
-    document.getElementById(paid).style.color = 'green'
-  }
 
   async confirmDeleteExpense(id: string) {
     const alert = await this.alertController.create({
@@ -59,4 +47,19 @@ export class ExpenseItemsComponent implements OnChanges {
 
     await alert.present()
   }
+
+  checkExpenseOverdue(expense: ExpenseItem) {
+    const dateNow = new Date()
+    const dateExpense = new Date(expense.dueDate)
+
+    return (
+      !expense.paid &&
+      (dateExpense.getMonth() < dateNow.getMonth() ||
+        (dateExpense.getMonth() === dateNow.getMonth() &&
+          dateExpense.getDate() < dateNow.getDate()))
+    )
+  }
+
+  private verifyNumberOneLessTwo = (numberOne: number, numberTwo: number) =>
+    numberOne < numberTwo
 }
