@@ -5,20 +5,32 @@
         <ion-icon slot="icon-only" name="brush"></ion-icon>
       </ion-item-option>
       <ion-item-option color="danger">
-        <ion-icon
-          slot="icon-only"
-          name="trash"
-          (click)="confirmDeleteExpense(expense.id)"
-        ></ion-icon>
+        <ion-icon slot="icon-only" name="trash" (click)="confirmDeleteExpense(expense.id)"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+    <ion-item-options side="end">
+      <ion-item-option color="{{ expense.paid ? 'success' : 'primary' }}">
+        <ion-checkbox slot="start" [(ngModel)]="expense.paid"></ion-checkbox>
+        <ion-label slot="end" for="1">Pago</ion-label>
       </ion-item-option>
     </ion-item-options>
 
-    <ion-item>
+    <ion-item id="{{ expense.id }}">
       <ion-label slot="start">
         <ion-row>{{ expense.title }}</ion-row>
         <ion-row>{{ expense.dueDate | date: 'dd/MM/yyyy' }}</ion-row>
       </ion-label>
-      <ion-note slot="end">{{ expense.value | currency: 'BRL' }}</ion-note>
+      <ion-note slot="end" color="{{
+          expense.paid
+            ? 'success'
+            : checkExpenseOverdue(expense)
+            ? 'danger'
+            : ''
+        }}">
+        <ion-row> R$ {{ expense.value }} </ion-row>
+        <ion-row *ngIf="expense.paid"> PAGO </ion-row>
+        <ion-row *ngIf="checkExpenseOverdue(expense)"> NÃO PAGO </ion-row>
+      </ion-note>
     </ion-item>
   </ion-item-sliding>
 </ion-list>

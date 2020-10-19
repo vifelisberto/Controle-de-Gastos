@@ -1,4 +1,4 @@
-import { category, repeat } from 'src/data-fake';
+import { category, repeat } from 'src/data-fake'
 
 export interface ExpenseItem {
   id?: string
@@ -7,4 +7,5 @@ export interface ExpenseItem {
   dueDate: Date
   value: number
   repeat: repeat
+  paid: boolean
 }

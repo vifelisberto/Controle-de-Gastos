@@ -18,8 +18,9 @@ export class ExpenseItemsComponent implements OnChanges {
     private router: Router,
   ) {}
 
-  ngOnChanges = (changes: SimpleChanges) =>
-    (this.expenses = changes.expenses.currentValue)
+  ngOnChanges(changes: SimpleChanges) {
+    this.expenses = changes.expenses.currentValue
+  }
 
   updateExpense = (expense: ExpenseItem) =>
     this.router.navigate(['/update'], { state: { data: expense } })
@@ -46,4 +47,19 @@ export class ExpenseItemsComponent implements OnChanges {
 
     await alert.present()
   }
+
+  checkExpenseOverdue(expense: ExpenseItem) {
+    const dateNow = new Date()
+    const dateExpense = new Date(expense.dueDate)
+
+    return (
+      !expense.paid &&
+      (dateExpense.getMonth() < dateNow.getMonth() ||
+        (dateExpense.getMonth() === dateNow.getMonth() &&
+          dateExpense.getDate() < dateNow.getDate()))
+    )
+  }
+
+  private verifyNumberOneLessTwo = (numberOne: number, numberTwo: number) =>
+    numberOne < numberTwo
 }

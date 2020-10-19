@@ -67,6 +67,7 @@ export class DataFakeExpensesService {
           dueDate: new Date(2020, i, 1),
           value: Math.floor(Math.random() * 100.0 + 1.0),
           repeat: repeat.monthly,
+          paid: false,
         }
 
         monthExpenses.months[i].push(newExpense)
