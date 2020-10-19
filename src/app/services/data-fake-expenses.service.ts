@@ -20,6 +20,7 @@ export class DataFakeExpensesService {
       const monthNewExpense = this.getNumberMonthString(expense.dueDate)
 
       expense.id = uuidv4()
+      expense.repeat = 1
       dataFake.dataMonthExpenses.months[monthNewExpense].push(expense)
 
       return true
