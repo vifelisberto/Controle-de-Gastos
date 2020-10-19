@@ -35,16 +35,24 @@ export class UpdateExpenseComponent implements OnInit {
   ngOnInit() {
     this.itemUpdate = this.router.getCurrentNavigation().extras.state?.data
 
-    if (this.itemUpdate)
+    if (this.itemUpdate) {
+      let dueDate
+
+      try {
+        dueDate = this.itemUpdate.dueDate.toDateString()
+      } catch {
+        dueDate = new Date(this.itemUpdate.dueDate).toDateString()
+      }
+
       this.expense.setValue({
         id: this.itemUpdate?.id,
         title: this.itemUpdate.title,
         value: this.itemUpdate.value,
-        dueDate: this.itemUpdate.dueDate.toDateString(),
+        dueDate,
         category: this.itemUpdate.category.toString(),
         repeat: this.itemUpdate.repeat.toString(),
       })
-    else this.router.navigate(['/home'])
+    } else this.router.navigate(['/home'])
   }
 
   openSelectPlots() {
