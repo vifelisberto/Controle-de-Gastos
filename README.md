@@ -73,3 +73,7 @@ ionic serve
 ### Husky
 
 Adicionamos o Husky no processo de desenvolvimento. Sempre que um membro commita uma alteração é automaticamente executado o tslint para formatar o código.
+
+### Licença
+
+GNU GPLv3
