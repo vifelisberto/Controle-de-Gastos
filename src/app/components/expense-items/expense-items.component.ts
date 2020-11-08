@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core'
 import { Router } from '@angular/router'
 import { AlertController } from '@ionic/angular'
-import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
+import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { ExpenseItem } from './expense-item'
 
 @Component({
@@ -14,7 +14,7 @@ export class ExpenseItemsComponent implements OnChanges {
 
   constructor(
     private alertController: AlertController,
-    private dataFakeService: DataFakeExpensesService,
+    private dataService: DataExpensesService,
     private router: Router,
   ) {}
 
@@ -39,7 +39,7 @@ export class ExpenseItemsComponent implements OnChanges {
         {
           text: 'Excluir',
           handler: () => {
-            this.dataFakeService.deleteExpense(id)
+            this.dataService.deleteExpense(id)
           },
         },
       ],
