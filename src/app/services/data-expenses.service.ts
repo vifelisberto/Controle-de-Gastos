@@ -58,7 +58,7 @@ export class DataExpensesService {
       x => x.id === newExpense.id,
     )
 
-    if (indexItem) {
+    if (indexItem !== -1) {
       this.dataMonthExpenses.months[monthExpense][indexItem] = newExpense
       this.storage.set(this.keyMonthExpense, this.dataMonthExpenses)
 

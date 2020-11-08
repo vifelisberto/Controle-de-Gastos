@@ -60,6 +60,10 @@ export class ExpenseItemsComponent implements OnChanges {
     )
   }
 
+  changePaid(expense: ExpenseItem) {
+    this.dataService.updateExpense(expense)
+  }
+
   private verifyNumberOneLessTwo = (numberOne: number, numberTwo: number) =>
     numberOne < numberTwo
 }
