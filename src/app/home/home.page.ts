@@ -1,7 +1,6 @@
-import { DataFakeExpensesService } from './../services/data-fake-expenses.service'
+import { DataExpensesService } from '../services/data-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
-import { Component } from '@angular/core'
-import { dataFake } from './../../data-fake'
+import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
@@ -9,21 +8,21 @@ import { Router } from '@angular/router'
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
   public monthSelect: number
   public expenses: ExpenseItem[]
 
   constructor(
     private router: Router,
-    private dataFakeService: DataFakeExpensesService,
-  ) {
-    dataFake.dataMonthExpenses = this.dataFakeService.generateFakeData()
+    private dataService: DataExpensesService,
+  ) {}
+
+  ngOnInit(): void {
     this.getExpensesMonth(this.monthSelect)
   }
 
-  getExpensesMonth(month: number) {
-    this.expenses = this.dataFakeService.getExpensesByMonth(month) || []
-  }
+  getExpensesMonth = async (month: number) =>
+    (this.expenses = (await this.dataService.getExpensesByMonth(month)) || [])
 
   createExpensePage = () => this.router.navigate(['/create'])
 

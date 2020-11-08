@@ -1,4 +1,5 @@
-import { category, repeat } from 'src/data-fake'
+import { category } from 'src/app/services/category'
+import { repeat } from 'src/app/services/repeat'
 
 export interface ExpenseItem {
   id?: string

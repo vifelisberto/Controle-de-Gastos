@@ -7,7 +7,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core'
 })
 export class MonthSelectComponent implements OnInit {
   @Output() eventMonth = new EventEmitter<number>()
-  public monthSelect: number
+  public monthSelect: number = new Date().getMonth()
 
   public readonly months = [
     'Janeiro',
@@ -25,7 +25,6 @@ export class MonthSelectComponent implements OnInit {
   ]
 
   ngOnInit() {
-    this.monthSelect = new Date().getMonth()
     this.emitEventMonth()
   }
 

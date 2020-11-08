@@ -1,10 +1,10 @@
-import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
+import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { ExpenseItem } from './../expense-items/expense-item'
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController, ToastController } from '@ionic/angular'
-import { repeat } from 'src/data-fake'
+import { repeat } from 'src/app/services/repeat'
 
 @Component({
   selector: 'app-update-expense',
@@ -26,7 +26,7 @@ export class UpdateExpenseComponent implements OnInit {
 
   constructor(
     public alertController: AlertController,
-    private dataFakeExpensesService: DataFakeExpensesService,
+    private dataExpensesService: DataExpensesService,
     private formBuilder: FormBuilder,
     private router: Router,
     private toastController: ToastController,
@@ -64,7 +64,7 @@ export class UpdateExpenseComponent implements OnInit {
   async updateExpense() {
     console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataFakeExpensesService.updateExpense(this.expense.value)) {
+      if (this.dataExpensesService.updateExpense(this.expense.value)) {
         this.toastSuccess()
         this.router.navigate(['/home'])
       } else await this.alertMessageInvalidData()
