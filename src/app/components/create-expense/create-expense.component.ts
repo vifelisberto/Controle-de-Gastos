@@ -20,6 +20,7 @@ export class CreateExpenseComponent {
     dueDate: ['', Validators.required],
     category: [''],
     repeat: [''],
+    paid: false,
   })
 
   constructor(
