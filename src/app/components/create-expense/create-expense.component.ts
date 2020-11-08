@@ -1,10 +1,10 @@
-import { DataFakeExpensesService } from 'src/app/services/data-fake-expenses.service'
-import { repeat } from './../../../data-fake'
+import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { Component } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 import { Router } from '@angular/router'
 import { ToastController } from '@ionic/angular'
+import { repeat } from 'src/app/services/repeat'
 
 @Component({
   selector: 'app-create-expense',
@@ -26,7 +26,7 @@ export class CreateExpenseComponent {
     public alertController: AlertController,
     private formBuilder: FormBuilder,
     private router: Router,
-    private dataFakeExpensesService: DataFakeExpensesService,
+    private dataExpensesService: DataExpensesService,
     private toastController: ToastController,
   ) {}
 
@@ -37,9 +37,9 @@ export class CreateExpenseComponent {
   }
 
   async addNewExpense() {
-    console.log('submit', this.expense)
+    // console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataFakeExpensesService.addExpense(this.expense.value)) {
+      if (this.dataExpensesService.addExpense(this.expense.value)) {
         this.toastSuccess()
         this.router.navigate(['/home'])
       } else await this.alertMessageInvalidData()

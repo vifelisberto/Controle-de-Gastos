@@ -18,6 +18,7 @@ import { AnalysisExpensesComponent } from './components/analysis-expenses/analys
 import { ConfigComponent } from './components/config/config.component'
 import { AboutComponent } from './components/about/about.component'
 import { LoginComponent } from './login/login.component'
+import { IonicStorageModule } from '@ionic/storage'
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { LoginComponent } from './login/login.component'
     IonicModule.forRoot(),
     AppRoutingModule,
     ReactiveFormsModule,
+    IonicStorageModule.forRoot(),
   ],
   providers: [
     StatusBar,
