@@ -1,3 +1,4 @@
+import { MonthYear } from './../components/month-year-select/month-year'
 import { Injectable } from '@angular/core'
 import { ExpenseItem } from '../components/expense-items/expense-item'
 import { v4 as uuidv4 } from 'uuid'
@@ -10,39 +11,38 @@ import { repeat } from './repeat'
   providedIn: 'root',
 })
 export class DataExpensesService {
-  private keyMonthExpense = 'dataMonthExpenses'
-  private dataMonthExpenses = {
-    months: [[], [], [], [], [], [], [], [], [], [], [], []],
-  } as MonthExpenses
+  constructor(private storage: Storage) {}
 
-  constructor(private storage: Storage) {
-    this.getAllMonthsExpenses()
+  public async getExpensesByMonthAndYear(monthYear: MonthYear) {
+    const monthsOfYear = await this.storage.get(monthYear.year.toString())
+
+    const monthFilter = monthYear.month.toString()
+
+    if (monthFilter in monthsOfYear) {
+      return monthsOfYear[monthFilter]
+    }
+
+    return []
   }
-
-  public getAllMonthsExpenses = async () => {
-    const monthExpenses = await this.storage.get(this.keyMonthExpense)
-    if (monthExpenses) this.dataMonthExpenses = monthExpenses
-    else this.storage.set(this.keyMonthExpense, this.dataMonthExpenses)
-
-    return this.dataMonthExpenses.months
-  }
-
-  public getExpensesByMonth = async (month: number) =>
-    (await this.getAllMonthsExpenses())[month]
 
   public getExpenseById = (id: string) => {
     if (id) return this.searchExpenseById(id)
   }
 
-  public addExpense(expense: ExpenseItem): boolean {
+  public async addExpense(expense: ExpenseItem): Promise<boolean> {
     if (this.validExpense(expense)) {
-      const monthNewExpense = Number(this.getNumberMonthString(expense.dueDate))
+      const monthNewExpense = this.getMonth(expense.dueDate)
+      const yearNewExpense = this.getYear(expense.dueDate)
 
       expense.id = uuidv4()
       expense.repeat = 1
 
-      this.dataMonthExpenses.months[monthNewExpense].push(expense)
-      this.storage.set(this.keyMonthExpense, this.dataMonthExpenses)
+      const monthsOfYear = await this.storage.get(yearNewExpense.toString())
+
+      if (!(monthNewExpense.toString() in monthsOfYear))
+        monthsOfYear[monthNewExpense.toString()] = []
+
+      monthsOfYear[monthNewExpense.toString()].push(expense)
 
       return true
     }
@@ -52,7 +52,8 @@ export class DataExpensesService {
   }
 
   public updateExpense(newExpense: ExpenseItem) {
-    const monthExpense = Number(this.getNumberMonthString(newExpense.dueDate))
+    const monthExpense = this.getMonth(newExpense.dueDate)
+    const yearNewExpense = this.getYear(newExpense.dueDate)
 
     const indexItem = this.dataMonthExpenses.months[monthExpense]?.findIndex(
       x => x.id === newExpense.id,
@@ -85,11 +86,18 @@ export class DataExpensesService {
     if (id)
       for (const monthExpense of this.dataMonthExpenses.months)
         return monthExpense.find(expense => expense.id === id)
+
+    const monthsOfYear = await this.storage.get()
+
+    Object.entries(obj).forEach(([key, value]) => {
+      console.log(key + ' ' + value) // "a 5", "b 7", "c 9"
+    })
   }
 
   private validExpense = (expense: ExpenseItem) =>
     expense && expense.title && expense.dueDate && expense.value
 
-  private getNumberMonthString = (date: Date) =>
-    new Date(date).getMonth().toString()
+  private getMonth = (date: Date) => new Date(date).getMonth()
+
+  private getYear = (date: Date) => new Date(date).getFullYear()
 }

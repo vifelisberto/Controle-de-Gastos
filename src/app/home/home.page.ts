@@ -1,6 +1,7 @@
+import { MonthYear } from './../components/month-year-select/month-year'
 import { DataExpensesService } from '../services/data-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
@@ -8,8 +9,8 @@ import { Router } from '@angular/router'
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePageComponent implements OnInit {
-  public monthSelect: number
+export class HomePageComponent {
+  // public monthSelect: number
   public expenses: ExpenseItem[]
 
   constructor(
@@ -17,12 +18,13 @@ export class HomePageComponent implements OnInit {
     private dataService: DataExpensesService,
   ) {}
 
-  ngOnInit(): void {
-    this.getExpensesMonth(this.monthSelect)
-  }
+  // ngOnInit(): void {
+  //   this.getExpensesMonth(this.monthSelect)
+  // }
 
-  getExpensesMonth = async (month: number) =>
-    (this.expenses = (await this.dataService.getExpensesByMonth(month)) || [])
+  getExpensesMonth = async (monthYear: MonthYear) =>
+    (this.expenses =
+      (await this.dataService.getExpensesByMonthAndYear(monthYear)) || [])
 
   createExpensePage = () => this.router.navigate(['/create'])
 

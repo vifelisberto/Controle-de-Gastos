@@ -9,7 +9,7 @@ import { AppRoutingModule } from './app-routing.module'
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component'
 import { HomePageComponent } from './home/home.page'
 import { ExpenseItemsComponent } from './components/expense-items/expense-items.component'
-import { MonthSelectComponent } from './components/month-select/month-select.component'
+import { MonthYearSelectComponent } from './components/month-year-select/month-year-select.component'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MenuComponent } from './components/menu/menu.component'
@@ -26,7 +26,7 @@ import { IonicStorageModule } from '@ionic/storage'
     CreateExpenseComponent,
     HomePageComponent,
     ExpenseItemsComponent,
-    MonthSelectComponent,
+    MonthYearSelectComponent,
     MenuComponent,
     UpdateExpenseComponent,
     AnalysisExpensesComponent,
