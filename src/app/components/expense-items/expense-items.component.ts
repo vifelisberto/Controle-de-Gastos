@@ -38,8 +38,9 @@ export class ExpenseItemsComponent implements OnChanges {
         },
         {
           text: 'Excluir',
-          handler: () => {
-            this.dataService.deleteExpense(id)
+          handler: async () => {
+            const deleted = await this.dataService.deleteExpense(id)
+            this.router.navigate(['/home'], { state: { data: deleted } })
           },
         },
       ],
@@ -60,10 +61,8 @@ export class ExpenseItemsComponent implements OnChanges {
     )
   }
 
-  changePaid(expense: ExpenseItem) {
-    this.dataService.updateExpense(expense)
+  async changePaid(expense: ExpenseItem) {
+    await this.dataService.updateExpense(expense)
+    this.router.navigate(['/home'])
   }
-
-  private verifyNumberOneLessTwo = (numberOne: number, numberTwo: number) =>
-    numberOne < numberTwo
 }

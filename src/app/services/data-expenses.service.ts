@@ -40,7 +40,6 @@ export class DataExpensesService {
 
       if (!yearsAndMonths) {
         yearsAndMonths = {}
-        this.storage.set(this.keyData, yearsAndMonths)
       }
 
       if (!(yearNewExpense in yearsAndMonths)) {
@@ -52,7 +51,7 @@ export class DataExpensesService {
 
       yearsAndMonths[yearNewExpense][monthNewExpense].push(expense)
 
-      this.storage.set(this.keyData, yearsAndMonths)
+      await this.storage.set(this.keyData, yearsAndMonths)
 
       return true
     }
@@ -64,27 +63,26 @@ export class DataExpensesService {
   public async updateExpense(newExpense: ExpenseItem) {
     const yearsAndMonths = await this.getAllYearsAndMonths()
 
-    Object.entries(yearsAndMonths).forEach(async ([key, year]) => {
+    for (const [keyYear, year] of Object.entries(yearsAndMonths)) {
       if (year)
-        return await Object.entries(year).forEach(
-          async ([key2, monthOfYear]) => {
-            if (monthOfYear) {
-              const idx = monthOfYear.findIndex(
-                expense => expense.id === newExpense.id,
-              )
+        for (const [keyMonth, monthOfYear] of Object.entries(year)) {
+          if (monthOfYear) {
+            const idx = monthOfYear.findIndex(
+              expense => expense.id === newExpense.id,
+            )
 
-              if (idx > -1) {
-                yearsAndMonths[year as string][monthOfYear].slice(idx, 1)
+            if (idx > -1) {
+              yearsAndMonths[keyYear][keyMonth].splice(idx, 1)
 
-                this.storage.set(this.keyData, yearsAndMonths)
+              await this.storage.set(this.keyData, yearsAndMonths)
 
-                await this.addExpense(newExpense)
-                return true
-              }
+              await this.addExpense(newExpense)
+
+              return true
             }
-          },
-        )
-    })
+          }
+        }
+    }
 
     return false
   }
@@ -93,21 +91,23 @@ export class DataExpensesService {
     if (id) {
       const yearsAndMonths = await this.getAllYearsAndMonths()
 
-      return Object.entries(yearsAndMonths).forEach(([key, year]) => {
+      for (const [keyYear, year] of Object.entries(yearsAndMonths)) {
         if (year)
-          return Object.entries(year).forEach(([key2, monthOfYear]) => {
+          for (const [keyMonth, monthOfYear] of Object.entries(year)) {
             if (monthOfYear) {
               const idx = monthOfYear.findIndex(expense => expense.id === id)
 
               if (idx > -1) {
-                yearsAndMonths[year as string][monthOfYear].slice(idx, 1)
+                const expenseDelete = yearsAndMonths[keyYear][keyMonth][idx]
 
-                this.storage.set(this.keyData, yearsAndMonths)
-                return
+                yearsAndMonths[keyYear][keyMonth].splice(idx, 1)
+
+                await this.storage.set(this.keyData, yearsAndMonths)
+                return expenseDelete
               }
             }
-          })
-      })
+          }
+      }
     }
   }
 

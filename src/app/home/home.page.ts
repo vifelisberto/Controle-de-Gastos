@@ -1,7 +1,7 @@
 import { MonthYear } from './../components/month-year-select/month-year'
 import { DataExpensesService } from '../services/data-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
@@ -9,13 +9,26 @@ import { Router } from '@angular/router'
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePageComponent {
+export class HomePageComponent implements OnInit {
+  public monthYearSelect: MonthYear
   public expenses: ExpenseItem[]
 
   constructor(
     private router: Router,
     private dataService: DataExpensesService,
   ) {}
+
+  ngOnInit(): void {
+    const expense = this.router.getCurrentNavigation().extras.state?.data
+
+    if (expense && expense.dueDate)
+      this.monthYearSelect = {
+        month: expense.dueDate.getMonth(),
+        year: expense.dueDate.getFullYear(),
+      }
+
+    this.getExpensesMonth(this.monthYearSelect)
+  }
 
   getExpensesMonth = async (monthYear: MonthYear) =>
     (this.expenses =
