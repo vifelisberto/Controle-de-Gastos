@@ -10,17 +10,12 @@ import { Router } from '@angular/router'
   styleUrls: ['home.page.scss'],
 })
 export class HomePageComponent {
-  // public monthSelect: number
   public expenses: ExpenseItem[]
 
   constructor(
     private router: Router,
     private dataService: DataExpensesService,
   ) {}
-
-  // ngOnInit(): void {
-  //   this.getExpensesMonth(this.monthSelect)
-  // }
 
   getExpensesMonth = async (monthYear: MonthYear) =>
     (this.expenses =
