@@ -61,8 +61,8 @@ export class ExpenseItemsComponent implements OnChanges {
     )
   }
 
-  async changePaid(expense: ExpenseItem) {
-    await this.dataService.updateExpense(expense)
+  changePaid(expense: ExpenseItem) {
+    this.dataService.updateExpense(expense)
     this.router.navigate(['/home'])
   }
 }

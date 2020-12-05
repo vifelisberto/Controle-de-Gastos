@@ -64,9 +64,9 @@ export class UpdateExpenseComponent implements OnInit {
   async updateExpense() {
     console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataExpensesService.updateExpense(this.expense.value)) {
+      if (await this.dataExpensesService.updateExpense(this.expense.value)) {
         this.toastSuccess()
-        this.router.navigate(['/home'], { state: { data: this.expense.value } })
+        this.router.navigate(['/home'])
       } else await this.alertMessageInvalidData()
     } else {
       console.log('Dados inválidos')

@@ -5,30 +5,38 @@ import { v4 as uuidv4 } from 'uuid'
 import { Storage } from '@ionic/storage'
 import { category } from './category'
 import { repeat } from './repeat'
+import { ControlExpenses } from './control-expenses'
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataExpensesService {
   private readonly keyData = 'ControlExpenses'
+  private yearsAndMonths: ControlExpenses
+  private promiseData: Promise<void>
 
-  constructor(private storage: Storage) {}
+  constructor(private storage: Storage) {
+    this.promiseData = this.fillYearsAndMonthsControlExpenses()
+  }
 
   public async getExpensesByMonthAndYear(monthYear: MonthYear) {
-    const yearsAndMonths = await this.getAllYearsAndMonths()
+    await this.promiseData
 
-    const monthsOfYear = this.getMonthsOfYear(yearsAndMonths, monthYear.year)
+    if (monthYear) {
+      const monthsOfYear = this.getMonthsOfYear(monthYear.year)
 
-    if (monthsOfYear) return this.getMonthOfYear(monthsOfYear, monthYear.month)
-
-    return []
+      if (monthsOfYear) return this.getMonthOfYear(monthsOfYear, monthYear)
+    }
   }
 
   public getExpenseById = async (id: string) => {
+    await this.promiseData
     if (id) return await this.searchExpenseById(id)
   }
 
   public async addExpense(expense: ExpenseItem) {
+    await this.promiseData
+
     if (this.validExpense(expense)) {
       const monthNewExpense = this.getMonth(expense.dueDate)
       const yearNewExpense = this.getYear(expense.dueDate)
@@ -36,22 +44,20 @@ export class DataExpensesService {
       expense.id = uuidv4()
       expense.repeat = 1
 
-      let yearsAndMonths = await this.getAllYearsAndMonths()
-
-      if (!yearsAndMonths) {
-        yearsAndMonths = {}
+      if (!this.yearsAndMonths) {
+        this.yearsAndMonths = {}
       }
 
-      if (!(yearNewExpense in yearsAndMonths)) {
-        yearsAndMonths[yearNewExpense] = {}
+      if (!(yearNewExpense in this.yearsAndMonths)) {
+        this.yearsAndMonths[yearNewExpense] = {}
       }
 
-      if (!(monthNewExpense in yearsAndMonths[yearNewExpense]))
-        yearsAndMonths[yearNewExpense][monthNewExpense] = []
+      if (!(monthNewExpense in this.yearsAndMonths[yearNewExpense]))
+        this.yearsAndMonths[yearNewExpense][monthNewExpense] = []
 
-      yearsAndMonths[yearNewExpense][monthNewExpense].push(expense)
+      this.yearsAndMonths[yearNewExpense][monthNewExpense].push(expense)
 
-      await this.storage.set(this.keyData, yearsAndMonths)
+      this.setControlExpenses(this.yearsAndMonths)
 
       return true
     }
@@ -61,66 +67,85 @@ export class DataExpensesService {
   }
 
   public async updateExpense(newExpense: ExpenseItem) {
-    const yearsAndMonths = await this.getAllYearsAndMonths()
+    await this.promiseData
 
-    for (const [keyYear, year] of Object.entries(yearsAndMonths)) {
-      if (year)
-        for (const [keyMonth, monthOfYear] of Object.entries(year)) {
-          if (monthOfYear) {
-            const idx = monthOfYear.findIndex(
-              expense => expense.id === newExpense.id,
-            )
+    if (this.yearsAndMonths)
+      for (const year in this.yearsAndMonths) {
+        if (this.yearsAndMonths[year])
+          for (const month in this.yearsAndMonths[year]) {
+            if (this.yearsAndMonths[year][month]) {
+              const idx = this.yearsAndMonths[year][month].findIndex(
+                expense => expense.id === newExpense.id,
+              )
 
-            if (idx > -1) {
-              yearsAndMonths[keyYear][keyMonth].splice(idx, 1)
+              if (idx > -1) {
+                const expenseExist = this.yearsAndMonths[year][month][idx]
 
-              await this.storage.set(this.keyData, yearsAndMonths)
+                const dateExist = new Date(expenseExist.dueDate)
+                const dateNew = new Date(newExpense.dueDate)
 
-              await this.addExpense(newExpense)
+                if (
+                  dateExist.getMonth() !== dateNew.getMonth() ||
+                  dateExist.getFullYear() !== dateNew.getFullYear()
+                ) {
+                  this.yearsAndMonths[year][month].splice(idx, 1)
 
-              return true
+                  this.addExpense(newExpense)
+                } else {
+                  this.yearsAndMonths[year][month][idx] = newExpense
+                  this.setControlExpenses(this.yearsAndMonths)
+                }
+
+                return true
+              }
             }
           }
-        }
-    }
+      }
 
     return false
   }
 
   public async deleteExpense(id: string) {
     if (id) {
-      const yearsAndMonths = await this.getAllYearsAndMonths()
+      await this.promiseData
 
-      for (const [keyYear, year] of Object.entries(yearsAndMonths)) {
-        if (year)
-          for (const [keyMonth, monthOfYear] of Object.entries(year)) {
-            if (monthOfYear) {
-              const idx = monthOfYear.findIndex(expense => expense.id === id)
+      if (this.yearsAndMonths)
+        for (const year in this.yearsAndMonths) {
+          if (this.yearsAndMonths[year])
+            for (const month in this.yearsAndMonths[year]) {
+              if (this.yearsAndMonths[year][month]) {
+                const idx = this.yearsAndMonths[year][month].findIndex(
+                  expense => expense.id === id,
+                )
 
-              if (idx > -1) {
-                const expenseDelete = yearsAndMonths[keyYear][keyMonth][idx]
+                if (idx > -1) {
+                  const expenseDelete = this.yearsAndMonths[year][month][idx]
 
-                yearsAndMonths[keyYear][keyMonth].splice(idx, 1)
+                  this.yearsAndMonths[year][month].splice(idx, 1)
 
-                await this.storage.set(this.keyData, yearsAndMonths)
-                return expenseDelete
+                  this.setControlExpenses(this.yearsAndMonths)
+                  return expenseDelete
+                }
               }
             }
-          }
-      }
+        }
     }
   }
 
   private async searchExpenseById(id: string) {
-    const yearsAndMonths = await this.getAllYearsAndMonths()
+    if (this.yearsAndMonths)
+      for (const year in this.yearsAndMonths) {
+        if (this.yearsAndMonths[year])
+          for (const month in this.yearsAndMonths[year]) {
+            if (this.yearsAndMonths[year][month]) {
+              const existsExpense = this.yearsAndMonths[year][month].find(
+                expense => expense.id === id,
+              )
 
-    Object.entries(yearsAndMonths).forEach(([key, year]) => {
-      if (year)
-        Object.entries(year).forEach(([key2, monthsOfYear]) => {
-          if (monthsOfYear)
-            return monthsOfYear.find(expense => expense.id === id)
-        })
-    })
+              if (existsExpense) return existsExpense
+            }
+          }
+      }
   }
 
   private validExpense = (expense: ExpenseItem) =>
@@ -130,14 +155,32 @@ export class DataExpensesService {
 
   private getYear = (date: Date) => new Date(date).getFullYear()
 
-  private getAllYearsAndMonths = async () =>
-    await this.storage.get(this.keyData)
+  private getMonthsOfYear(yearFilter: number) {
+    if (!this.yearsAndMonths) {
+      this.yearsAndMonths = {}
 
-  private getMonthsOfYear(yearsAndMonths, yearFilter: number) {
-    if (yearFilter in yearsAndMonths) return yearsAndMonths[yearFilter]
+      if (!(yearFilter in this.yearsAndMonths)) {
+        this.yearsAndMonths[yearFilter] = {}
+      }
+    }
+
+    return this.yearsAndMonths[yearFilter]
   }
 
-  private getMonthOfYear(monthsOfYear, monthFilter) {
-    if (monthFilter in monthsOfYear) return monthsOfYear[monthFilter]
+  private getMonthOfYear(monthsOfYear, monthYearFilter: MonthYear) {
+    if (!(monthYearFilter.month in this.yearsAndMonths[monthYearFilter.year]))
+      this.yearsAndMonths[monthYearFilter.year][monthYearFilter.month] = []
+
+    return monthsOfYear[monthYearFilter.month]
+  }
+
+  private setControlExpenses(controlExpenses: ControlExpenses): void {
+    this.yearsAndMonths = controlExpenses
+    this.storage.set(this.keyData, controlExpenses)
+  }
+
+  private async fillYearsAndMonthsControlExpenses() {
+    const controlExpenses = await this.storage.get(this.keyData)
+    this.yearsAndMonths = controlExpenses
   }
 }
