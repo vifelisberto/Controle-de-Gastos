@@ -1,25 +1,14 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>Sign in</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content>
-  <form>
-    <ion-row>
-      <ion-col>
-        <ion-button
-          type="submit"
-          color="danger"
-          (click)="authService.GoogleAuth()"
-          expand="block"
-        >
-          Login with Google
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </form>
-</ion-content>
+<form>
+  <ion-row>
+    <ion-col>
+      <ion-button
+        type="submit"
+        color="danger"
+        (click)="authService.GoogleAuth()"
+        expand="block"
+      >
+        Login with Google
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</form>
