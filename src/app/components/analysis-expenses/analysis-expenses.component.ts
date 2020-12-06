@@ -55,7 +55,7 @@ export class AnalysisExpensesComponent implements OnInit {
   async ionViewDidEnter() {
     this.createBarChart()
     await this.createLineChart()
-    this.createPieChart()
+    await this.createPieChart()
     this.createDoughnutChart()
   }
 
@@ -241,15 +241,33 @@ export class AnalysisExpensesComponent implements OnInit {
   }*/
 
   //Aqui está o grafico de pizza, 3 na tela de exibição
-  createPieChart() {
+  async createPieChart() {
+    const date = new Date()
+    const month1 = date.getMonth()
+    const year1 = date.getFullYear()
+    const date2 = new Date(date.setMonth(month1 + 1))
+
+    const expensesMonthSum1 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: month1,
+        year: year1,
+      }),
+    )
+
+    const expensesMonthSum2 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date2.getMonth(),
+        year: date2.getFullYear(),
+      }),
+    )
     this.bars = new Chart(this.pieCanvas.nativeElement, {
       type: 'pie',
       data: {
-        labels: ['Outubro', 'Novembro'],
+        labels: [this.months[month1], this.months[date2.getMonth()]],
         datasets: [
           {
             label: 'Gastos referente ao Ano de 2020',
-            data: [500, 1000],
+            data: [expensesMonthSum1, expensesMonthSum2],
             backgroundColor: ['rgb(255, 0, 0)', 'rgb(20, 0, 255)'],
             borderColor: 'rgb(38, 194, 129)',
             borderWidth: 1,
