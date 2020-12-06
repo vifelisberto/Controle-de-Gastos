@@ -16,7 +16,7 @@ import {
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
-  public title
+  public title: string
   public isHomePage: boolean
   private homeUrl = '/home'
 
