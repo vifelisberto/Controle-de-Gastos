@@ -289,22 +289,80 @@ export class AnalysisExpensesComponent implements OnInit {
   }
 
   //Aqui está o grafico de doughnut, 4 na tela de exibição
-  createDoughnutChart() {
+  async createDoughnutChart() {
+    const date = new Date()
+    const month1 = date.getMonth()
+    const year1 = date.getFullYear()
+    const date2 = new Date(date.setMonth(month1 + 1))
+    const date3 = new Date(date.setMonth(date.getMonth() + 1))
+    const date4 = new Date(date.setMonth(date.getMonth() + 1))
+    const date5 = new Date(date.setMonth(date.getMonth() + 1))
+    const date6 = new Date(date.setMonth(date.getMonth() + 1))
+
+    const expensesMonthSum1 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: month1,
+        year: year1,
+      }),
+    )
+
+    const expensesMonthSum2 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date2.getMonth(),
+        year: date2.getFullYear(),
+      }),
+    )
+
+    const expensesMonthSum3 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date3.getMonth(),
+        year: date3.getFullYear(),
+      }),
+    )
+
+    const expensesMonthSum4 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date4.getMonth(),
+        year: date4.getFullYear(),
+      }),
+    )
+
+    const expensesMonthSum5 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date5.getMonth(),
+        year: date5.getFullYear(),
+      }),
+    )
+
+    const expensesMonthSum6 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date6.getMonth(),
+        year: date6.getFullYear(),
+      }),
+    )
+
     this.bars = new Chart(this.doughnutCanvas.nativeElement, {
       type: 'doughnut',
       data: {
         labels: [
-          'Outubro',
-          'Novembro',
-          'Dezembro',
-          'Janeiro',
-          'Fevereiro',
-          'Março',
+          this.months[month1],
+          this.months[date2.getMonth()],
+          this.months[date3.getMonth()],
+          this.months[date4.getMonth()],
+          this.months[date5.getMonth()],
+          this.months[date6.getMonth()],
         ],
         datasets: [
           {
-            label: 'Gastos referente ao Ano de 2020',
-            data: [200.5, 200, 90, 500, 700],
+            label: 'Gastos nó proximo semestre',
+            data: [
+              expensesMonthSum1,
+              expensesMonthSum2,
+              expensesMonthSum3,
+              expensesMonthSum4,
+              expensesMonthSum5,
+              expensesMonthSum6,
+            ],
             backgroundColor: [
               'rgb(38, 194, 129)',
               'rgb(255, 0, 0)',
