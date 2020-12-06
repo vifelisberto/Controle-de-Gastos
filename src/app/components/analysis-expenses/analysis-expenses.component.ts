@@ -1,5 +1,8 @@
-import { MonthYear } from './../month-year-select/month-year';
-import { ExpenseItem } from './../expense-items/expense-item';
+import { element } from 'protractor'
+import { DataExpensesService } from 'src/app/services/data-expenses.service'
+import { MonthExpenses } from './../../home/month-expense'
+import { MonthYear } from './../month-year-select/month-year'
+import { ExpenseItem } from './../expense-items/expense-item'
 import { Component, OnInit, ViewChild } from '@angular/core'
 import { Chart } from 'chart.js'
 
@@ -17,26 +20,54 @@ export class AnalysisExpensesComponent implements OnInit {
   lineChart: any
   pieChart: any
   doughnutChart: any
-  ExpenseItem = [];
-  monthSelectA : [];
+  expenseItem: ExpenseItem[]
+  expensePromisse
 
   bars: any
   colorArray: any
 
-  constructor() {}
+  public readonly months = [
+    'Janeiro',
+    'Fevereiro',
+    'Março',
+    'Abril',
+    'Maio',
+    'Junho',
+    'Julho',
+    'Agosto',
+    'Setembro',
+    'Outubro',
+    'Novembro',
+    'Dezembro',
+  ]
+
+  constructor(private dataExpensesService: DataExpensesService) {
+    this.expensePromisse = this.fillExpense()
+  }
 
   ngOnInit(): void {}
+  async fillExpense() {
+    this.expenseItem = await this.dataExpensesService.getExpensesByMonthAndYear(
+      { month: 0, year: 2020 },
+    )
+  }
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
     this.createBarChart()
-    this.createLineChart()
+    await this.createLineChart()
     this.createPieChart()
     this.createDoughnutChart()
   }
 
+  getSumAllExpensesAnalysis(expenses: ExpenseItem[]) {
+    if (expenses) {
+      return expenses
+        ?.filter(expense => expense.value)
+        ?.reduce((sum, x) => sum + x.value, 0.0)
+    }
 
-
-
+    return 0.0
+  }
 
   createBarChart() {
     this.bars = new Chart(this.barChart.nativeElement, {
@@ -92,15 +123,46 @@ export class AnalysisExpensesComponent implements OnInit {
     })
   }
 
-  createLineChart() {
+  async createLineChart() {
+    const date = new Date()
+    const month1 = date.getMonth()
+    const year1 = date.getFullYear()
+    const date2 = new Date(date.setMonth(month1 + 1))
+    const date3 = new Date(date.setMonth(date.getMonth() + 1))
+
+    const expensesMonthSum1 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: month1,
+        year: year1,
+      }),
+    )
+
+    const expensesMonthSum2 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date2.getMonth(),
+        year: date2.getFullYear(),
+      }),
+    )
+
+    const expensesMonthSum3 = this.getSumAllExpensesAnalysis(
+      await this.dataExpensesService.getExpensesByMonthAndYear({
+        month: date3.getMonth(),
+        year: date3.getFullYear(),
+      }),
+    )
+
     this.bars = new Chart(this.lineCanvas.nativeElement, {
       type: 'line',
       data: {
-        labels: [new Date().getMonth()+'', new Date().getMonth()+1+'', new Date().getMonth()+2+''],
+        labels: [
+          this.months[month1],
+          this.months[date2.getMonth()],
+          this.months[date3.getMonth()],
+        ],
         datasets: [
           {
-            label: 'Gastos referente ao Ano de 2020',
-            data: [500, 1000, 200],
+            label: 'Gastos no próximo trimestre',
+            data: [expensesMonthSum1, expensesMonthSum2, expensesMonthSum3],
             backgroundColor: [
               'rgb(38, 194, 129)',
               'rgb(255, 0, 0)',
