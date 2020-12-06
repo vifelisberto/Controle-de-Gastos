@@ -1,6 +1,5 @@
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component'
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
-import { LoginComponent } from './login/login.component'
 import { ConfigComponent } from './components/config/config.component'
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
 import { AboutComponent } from './components/about/about.component'
@@ -30,11 +29,6 @@ const routes: Routes = [
     data: { title: 'Configurações' },
   },
   {
-    path: 'login',
-    component: LoginComponent,
-    data: { title: 'Login' },
-  },
-  {
     path: 'create',
     component: CreateExpenseComponent,
     data: { title: 'Nova Despesa' },
@@ -48,6 +42,25 @@ const routes: Routes = [
     path: '',
     redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'verify-email',
+    loadChildren: () =>
+      import('./verify-email/verify-email.module').then(
+        m => m.VerifyEmailPageModule,
+      ),
+  },
+  {
+    path: 'login',
+    loadChildren: () =>
+      import('./login/login.module').then(m => m.LoginPageModule),
+  },
+  {
+    path: 'regisration',
+    loadChildren: () =>
+      import('./registration/registration.component').then(
+        m => m.RegistrationComponent,
+      ),
   },
 ]
 

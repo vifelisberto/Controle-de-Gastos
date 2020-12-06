@@ -17,9 +17,12 @@ import { UpdateExpenseComponent } from './components/update-expense/update-expen
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
 import { ConfigComponent } from './components/config/config.component'
 import { AboutComponent } from './components/about/about.component'
-import { LoginComponent } from './login/login.component'
 import { IonicStorageModule } from '@ionic/storage'
-
+import { AngularFireModule } from '@angular/fire'
+import { AngularFireAuthModule } from '@angular/fire/auth'
+import { AngularFireDatabaseModule } from '@angular/fire/database'
+import { AngularFirestoreModule } from '@angular/fire/firestore'
+import { environment } from '../environments/environment'
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +35,6 @@ import { IonicStorageModule } from '@ionic/storage'
     AnalysisExpensesComponent,
     ConfigComponent,
     AboutComponent,
-    LoginComponent,
   ],
   entryComponents: [],
   imports: [
@@ -43,10 +45,15 @@ import { IonicStorageModule } from '@ionic/storage'
     AppRoutingModule,
     ReactiveFormsModule,
     IonicStorageModule.forRoot(),
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
+    AngularFirestoreModule,
   ],
   providers: [
     StatusBar,
     SplashScreen,
+    AngularFirestoreModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent],
