@@ -1,14 +1,10 @@
-<form>
-  <ion-row>
-    <ion-col>
-      <ion-button
-        type="submit"
-        color="danger"
-        (click)="authService.GoogleAuth()"
-        expand="block"
-      >
-        Login with Google
-      </ion-button>
-    </ion-col>
-  </ion-row>
-</form>
+<ion-content>
+  <ion-button
+    type="submit"
+    color="primary"
+    (click)="authService.GoogleAuth()"
+    expand="block"
+  >
+    Entrar com Google
+  </ion-button>
+</ion-content>
