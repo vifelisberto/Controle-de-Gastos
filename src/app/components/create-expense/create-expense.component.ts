@@ -1,5 +1,6 @@
+import { MonthYear } from './../month-year-select/month-year'
 import { DataExpensesService } from 'src/app/services/data-expenses.service'
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { FormBuilder, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 import { Router } from '@angular/router'
@@ -11,8 +12,9 @@ import { repeat } from 'src/app/services/repeat'
   templateUrl: './create-expense.component.html',
   styleUrls: ['./create-expense.component.css'],
 })
-export class CreateExpenseComponent {
+export class CreateExpenseComponent implements OnInit {
   public currentPortion: string
+  public monthYearSelected: MonthYear
 
   public expense = this.formBuilder.group({
     title: ['', Validators.required],
@@ -31,6 +33,11 @@ export class CreateExpenseComponent {
     private toastController: ToastController,
   ) {}
 
+  ngOnInit(): void {
+    this.monthYearSelected = this.router.getCurrentNavigation().extras.state
+      ?.data || { month: new Date().getMonth(), year: new Date().getFullYear() }
+  }
+
   openSelectPlots() {
     if (this.expense.value.repeat === repeat.portion) {
       this.inputCustomPortionValue()
@@ -38,9 +45,8 @@ export class CreateExpenseComponent {
   }
 
   async addNewExpense() {
-    // console.log('submit', this.expense)
     if (this.expense.valid) {
-      if (this.dataExpensesService.addExpense(this.expense.value)) {
+      if (await this.dataExpensesService.addExpense(this.expense.value)) {
         this.toastSuccess()
         this.router.navigate(['/home'])
       } else await this.alertMessageInvalidData()

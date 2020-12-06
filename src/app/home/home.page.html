@@ -1,5 +1,7 @@
 <ion-header class="margin-home">
-  <app-month-select (eventMonth)="getExpensesMonth($event)"></app-month-select>
+  <app-month-year-select
+    (eventMonthYear)="getExpensesMonth($event)"
+  ></app-month-year-select>
 </ion-header>
 
 <ion-content [fullscreen]="true">
