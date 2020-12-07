@@ -1,29 +1,23 @@
+import { ExpenseItem } from './../expense-items/expense-item'
+import { repeat } from './../../services/repeat'
 import { MonthYear } from './../month-year-select/month-year'
 import { DataExpensesService } from 'src/app/services/data-expenses.service'
-import { Component, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
+import { Component } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 import { Router } from '@angular/router'
 import { ToastController } from '@ionic/angular'
-import { repeat } from 'src/app/services/repeat'
 
 @Component({
   selector: 'app-create-expense',
   templateUrl: './create-expense.component.html',
   styleUrls: ['./create-expense.component.css'],
 })
-export class CreateExpenseComponent implements OnInit {
+export class CreateExpenseComponent {
   public currentPortion: string
   public monthYearSelected: MonthYear
 
-  public expense = this.formBuilder.group({
-    title: ['', Validators.required],
-    value: ['', Validators.required],
-    dueDate: ['', Validators.required],
-    category: [''],
-    repeat: [''],
-    paid: false,
-  })
+  public expense: FormGroup
 
   constructor(
     public alertController: AlertController,
@@ -31,27 +25,71 @@ export class CreateExpenseComponent implements OnInit {
     private router: Router,
     private dataExpensesService: DataExpensesService,
     private toastController: ToastController,
-  ) {}
+  ) {
+    const dateNow = new Date()
 
-  ngOnInit(): void {
     this.monthYearSelected = this.router.getCurrentNavigation().extras.state
-      ?.data || { month: new Date().getMonth(), year: new Date().getFullYear() }
-  }
+      ?.data || { month: dateNow.getMonth(), year: dateNow.getFullYear() }
 
-  openSelectPlots() {
-    if (this.expense.value.repeat === repeat.portion) {
-      this.inputCustomPortionValue()
-    }
+    this.expense = this.formBuilder.group({
+      title: ['', Validators.required],
+      value: ['', Validators.required],
+      dueDate: [
+        `${this.monthYearSelected.year}-${
+          this.monthYearSelected.month + 1 < 10
+            ? '0' + (this.monthYearSelected.month + 1)
+            : this.monthYearSelected.month + 1
+        }-${dateNow.getDate()}`,
+        Validators.required,
+      ],
+      category: [''],
+      repeat: false,
+      paid: false,
+      qtyPortion: undefined,
+      repeatType: undefined,
+    })
   }
 
   async addNewExpense() {
     if (this.expense.valid) {
-      if (await this.dataExpensesService.addExpense(this.expense.value)) {
+      if (this.expense.value?.repeat) {
+        if (this.expense.value?.repeatType === 'portion') {
+          await this.addNewExpensesRepeat(
+            this.expense.value,
+            this.expense.value?.qtyPortion,
+          )
+          this.toastSuccess()
+          this.router.navigate(['/home'])
+        } else if (this.expense.value?.repeatType === 'fixed') {
+          const months = 400
+          await this.addNewExpensesRepeat(this.expense.value, months)
+          this.toastSuccess()
+          this.router.navigate(['/home'])
+        }
+      } else if (
+        await this.dataExpensesService.addExpense(this.expense.value)
+      ) {
         this.toastSuccess()
         this.router.navigate(['/home'])
       } else await this.alertMessageInvalidData()
     } else {
       console.log('Dados inválidos')
+    }
+  }
+
+  async addNewExpensesRepeat(expense: ExpenseItem, qtyPortion: number) {
+    let dateExpense = new Date(expense.dueDate)
+
+    for (let i = 1; i <= qtyPortion; i++) {
+      let expenseForAdd = { ...expense }
+      expenseForAdd.dueDate = `${dateExpense.getFullYear()}-${
+        dateExpense.getMonth() + 1 < 10
+          ? '0' + (dateExpense.getMonth() + 1)
+          : dateExpense.getMonth() + 1
+      }-${dateExpense.getDate()}`
+
+      await this.dataExpensesService.addExpense(expenseForAdd)
+      dateExpense.setMonth(dateExpense.getMonth() + 1)
     }
   }
 
@@ -61,15 +99,6 @@ export class CreateExpenseComponent implements OnInit {
       duration: 1000,
     })
     toast.present()
-  }
-
-  private async inputCustomPortionValue() {
-    const inputAlert = await this.alertController.create({
-      header: 'Qual o número de parcelas?',
-      inputs: [{ type: 'text', placeholder: 'Parcelas' }],
-      buttons: [{ text: 'Cancelar' }, { text: 'Ok' }],
-    })
-    await inputAlert.present()
   }
 
   private async alertMessageInvalidData() {

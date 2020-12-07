@@ -19,12 +19,13 @@ export class HomePageComponent {
   ) {}
 
   async getExpensesMonth(monthYear: MonthYear) {
+    this.monthYearSelect = monthYear
     this.expenses =
       (await this.dataService.getExpensesByMonthAndYear(monthYear)) || []
   }
 
   createExpensePage = () =>
-    this.router.navigate(['/create', { state: { data: this.monthYearSelect } }])
+    this.router.navigate(['/create'], { state: { data: this.monthYearSelect } })
 
   getSumAllExpenses() {
     if (this.expenses) {

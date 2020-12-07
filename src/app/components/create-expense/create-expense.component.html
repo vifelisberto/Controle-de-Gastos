@@ -28,7 +28,6 @@
         display-timezone="utc"
         min="2020-01-01"
         max="2100-12-31"
-        value="2022-01-01"
         required="true"
       >
       </ion-datetime>
@@ -52,26 +51,35 @@
       <ion-toggle formControlName="repeat"></ion-toggle>
     </ion-item>
 
-    <!-- <ion-radio-group>
-      <ion-item>
-        <ion-label>Fixo</ion-label>
-        <ion-radio slot="start" value="fixed"></ion-radio>
-      </ion-item>
+    <section
+      class="repeat-expenses"
+      *ngIf="this.expense.controls['repeat']?.value"
+    >
+      <ion-radio-group formControlName="repeatType">
+        <ion-item class="padding">
+          <ion-label>Mensalmente</ion-label>
+          <ion-radio value="fixed"></ion-radio>
+        </ion-item>
 
-      <ion-item>
-        <ion-label>Parcelado</ion-label>
-        <ion-radio slot="start" value="month"></ion-radio>
-      </ion-item>
-    </ion-radio-group> -->
+        <ion-item class="padding">
+          <ion-label>Parcelas</ion-label>
+          <ion-radio value="portion"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
 
-    <!-- <ion-item class="padding">
-      <ion-label position="floating">Repetir despesa</ion-label>
-      <ion-select class="padding" (ionChange)="openSelectPlots()" required="true">
-        <ion-select-option value="1">Não repetir</ion-select-option>
-        <ion-select-option value="2">Mensalmente</ion-select-option>
-        <ion-select-option value="3">Parcelas</ion-select-option>
-      </ion-select>
-    </ion-item> -->
+      <ion-item
+        class="padding"
+        *ngIf="this.expense.controls['repeatType'].value == 'portion'"
+      >
+        <ion-label position="floating">Quantidade de Parcelas</ion-label>
+        <ion-input
+          type="number"
+          inputmode="tel"
+          formControlName="qtyPortion"
+          min="1"
+        ></ion-input>
+      </ion-item>
+    </section>
 
     <ion-button
       class="ion-padding"
