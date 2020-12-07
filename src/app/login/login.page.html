@@ -1,10 +1,17 @@
 <ion-content>
-  <ion-button
-    type="submit"
-    color="primary"
-    (click)="authService.GoogleAuth()"
-    expand="block"
-  >
-    Entrar com Google
-  </ion-button>
+  <ion-grid>
+    <ion-row>
+      <ion-col> Controle de Gastos </ion-col>
+      <ion-col class="centered-button">
+        <ion-button
+          type="submit"
+          color="primary"
+          (click)="authService.GoogleAuth()"
+          expand="block"
+        >
+          Entrar com Google
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
