@@ -1,1 +1,24 @@
-{}
+{
+  "appId": "io.ionic.starter",
+  "appName": "ionic-app-base",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {
+    "preferences": {
+      "ScrollEnabled": "false",
+      "BackupWebStorage": "none",
+      "SplashMaintainAspectRatio": "true",
+      "FadeSplashScreenDuration": "300",
+      "SplashShowOnlyFirstTime": "false",
+      "SplashScreen": "screen",
+      "SplashScreenDelay": "3000"
+    }
+  },
+  "linuxAndroidStudioPath": "/home/vinicius/.local/share/JetBrains/Toolbox/apps/AndroidStudio/ch-0/201.6858069/bin/studio.sh"
+}
