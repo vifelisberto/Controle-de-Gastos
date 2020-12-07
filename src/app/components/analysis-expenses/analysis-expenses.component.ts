@@ -1,9 +1,6 @@
-import { element } from 'protractor'
 import { DataExpensesService } from 'src/app/services/data-expenses.service'
-import { MonthExpenses } from './../../home/month-expense'
-import { MonthYear } from './../month-year-select/month-year'
 import { ExpenseItem } from './../expense-items/expense-item'
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { Chart } from 'chart.js'
 
 @Component({
@@ -11,7 +8,7 @@ import { Chart } from 'chart.js'
   templateUrl: './analysis-expenses.component.html',
   styleUrls: ['./analysis-expenses.component.css'],
 })
-export class AnalysisExpensesComponent implements OnInit {
+export class AnalysisExpensesComponent {
   @ViewChild('barChart') barChart
   @ViewChild('lineCanvas') lineCanvas
   @ViewChild('pieCanvas') pieCanvas
@@ -20,9 +17,6 @@ export class AnalysisExpensesComponent implements OnInit {
   lineChart: any
   pieChart: any
   doughnutChart: any
-  expenseItem: ExpenseItem[]
-  expensePromisse
-
   bars: any
   colorArray: any
 
@@ -41,19 +35,10 @@ export class AnalysisExpensesComponent implements OnInit {
     'Dezembro',
   ]
 
-  constructor(private dataExpensesService: DataExpensesService) {
-    this.expensePromisse = this.fillExpense()
-  }
-
-  ngOnInit(): void {}
-  async fillExpense() {
-    this.expenseItem = await this.dataExpensesService.getExpensesByMonthAndYear(
-      { month: 0, year: 2020 },
-    )
-  }
+  constructor(private dataExpensesService: DataExpensesService) {}
 
   async ionViewDidEnter() {
-    this.createBarChart()
+    await this.createBarChart()
     await this.createLineChart()
     await this.createPieChart()
     await this.createDoughnutChart()
@@ -421,7 +406,7 @@ export class AnalysisExpensesComponent implements OnInit {
         ],
         datasets: [
           {
-            label: 'Gastos nó proximo semestre',
+            label: 'Gastos no próximo semestre',
             data: [
               expensesMonthSum1,
               expensesMonthSum2,

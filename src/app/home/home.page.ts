@@ -1,6 +1,7 @@
 import { MonthYear } from './../components/month-year-select/month-year'
 import { DataExpensesService } from '../services/data-expenses.service'
-import { Component, OnInit } from '@angular/core'
+import { ExpenseItem } from './../components/expense-items/expense-item'
+import { Component } from '@angular/core'
 import { Router } from '@angular/router'
 
 @Component({
