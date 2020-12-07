@@ -1,7 +1,7 @@
 import { MonthYear } from './../month-year-select/month-year'
 import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { Component, OnInit } from '@angular/core'
-import { FormBuilder, Validators } from '@angular/forms'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { AlertController } from '@ionic/angular'
 import { Router } from '@angular/router'
 import { ToastController } from '@ionic/angular'
@@ -16,14 +16,7 @@ export class CreateExpenseComponent implements OnInit {
   public currentPortion: string
   public monthYearSelected: MonthYear
 
-  public expense = this.formBuilder.group({
-    title: ['', Validators.required],
-    value: ['', Validators.required],
-    dueDate: ['', Validators.required],
-    category: [''],
-    repeat: [''],
-    paid: false,
-  })
+  public expense: FormGroup
 
   constructor(
     public alertController: AlertController,
@@ -31,12 +24,28 @@ export class CreateExpenseComponent implements OnInit {
     private router: Router,
     private dataExpensesService: DataExpensesService,
     private toastController: ToastController,
-  ) {}
-
-  ngOnInit(): void {
+  ) {
     this.monthYearSelected = this.router.getCurrentNavigation().extras.state
       ?.data || { month: new Date().getMonth(), year: new Date().getFullYear() }
+
+    this.expense = this.formBuilder.group({
+      title: ['', Validators.required],
+      value: ['', Validators.required],
+      dueDate: [
+        `${this.monthYearSelected.year}-${
+          this.monthYearSelected.month + 1 < 10
+            ? '0' + (this.monthYearSelected.month + 1)
+            : this.monthYearSelected.month + 1
+        }-01`,
+        Validators.required,
+      ],
+      category: [''],
+      repeat: [''],
+      paid: false,
+    })
   }
+
+  ngOnInit(): void {}
 
   openSelectPlots() {
     if (this.expense.value.repeat === repeat.portion) {
