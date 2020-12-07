@@ -55,8 +55,11 @@ export class ExpenseItemsComponent implements OnChanges {
 
     return (
       !expense.paid &&
-      (dateExpense.getMonth() < dateNow.getMonth() ||
-        (dateExpense.getMonth() === dateNow.getMonth() &&
+      (dateExpense.getFullYear() < dateNow.getFullYear() ||
+        (dateExpense.getFullYear() === dateNow.getFullYear() &&
+          dateExpense.getMonth() < dateNow.getMonth()) ||
+        (dateExpense.getFullYear() === dateNow.getFullYear() &&
+          dateExpense.getMonth() === dateNow.getMonth() &&
           dateExpense.getDate() < dateNow.getDate()))
     )
   }
