@@ -5,7 +5,7 @@ export interface ExpenseItem {
   id?: string
   title: string
   category: category
-  dueDate: Date
+  dueDate: any
   value: number
   repeat: repeat
   paid: boolean
