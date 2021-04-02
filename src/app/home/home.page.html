@@ -4,8 +4,22 @@
   ></app-month-year-select>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<!-- <ion-content [fullscreen]="true">
   <app-expense-items *ngIf="expenses" [expenses]="expenses"></app-expense-items>
+</ion-content> -->
+
+<ion-content>
+  <ion-button expand="block" (click)="scheduleBasic()">Agendando</ion-button>
+  <ion-button expand="block" (click)="scheduleAvanced()">Recorrente</ion-button>
+
+  <ion-list>
+    <ion-item *ngFor="let n of scheduled">
+      <ion-label text-wrap>
+        {{ n.id }} - {{ n.title }}
+        <p>Trigger: {{ n.trigger | json }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>
 
 <ion-footer>

@@ -8,20 +8,11 @@
     "SplashScreen": {
       "launchShowDuration": 0
     },
-    "PushNotifications": {
-      "presentationOptions": ["badge", "sound", "alert"]
+    "LocalNotifications": {
+      "smallIcon": "ic_laucher",
+      "iconColor": "#FF0000",
+      "sound": "fanfare.wav"
     }
   },
-  "cordova": {
-    "preferences": {
-      "ScrollEnabled": "false",
-      "BackupWebStorage": "none",
-      "SplashMaintainAspectRatio": "true",
-      "FadeSplashScreenDuration": "300",
-      "SplashShowOnlyFirstTime": "false",
-      "SplashScreen": "screen",
-      "SplashScreenDelay": "3000"
-    }
-  },
-  "linuxAndroidStudioPath": "/home/vinicius/.local/share/JetBrains/Toolbox/apps/AndroidStudio/ch-0/201.6858069/bin/studio.sh"
+  "cordova": {}
 }
