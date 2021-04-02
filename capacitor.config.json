@@ -9,10 +9,12 @@
       "launchShowDuration": 0
     },
     "LocalNotifications": {
-      "smallIcon": "ic_laucher",
-      "iconColor": "#FF0000",
-      "sound": "fanfare.wav"
+      "iconColor": "#FF0000"
     }
   },
-  "cordova": {}
+  "cordova": {
+    "preferences": {
+      "DisableDeploy": "true"
+    }
+  }
 }

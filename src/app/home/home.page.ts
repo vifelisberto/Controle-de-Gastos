@@ -9,7 +9,11 @@ import { Router } from '@angular/router'
 //   LocalNotifications,
 // } from '@ionic-native/local-notifications/ngx'
 
-import { Plugins } from '@capacitor/core'
+import {
+  LocalNotification,
+  LocalNotificationActionPerformed,
+  Plugins,
+} from '@capacitor/core'
 const { LocalNotifications } = Plugins
 
 @Component({
@@ -32,18 +36,18 @@ export class HomePageComponent implements OnInit {
   async ngOnInit() {
     await LocalNotifications.requestPermission()
 
-    LocalNotifications.registerActionTypes({
-      types: [
-        {
-          id: 'CHAT_MSG',
-          actions: [
-            { id: 'view', title: 'Open Chat' },
-            { id: 'remove', title: 'Dismiss', destructive: true },
-            { id: 'responde', title: 'Responde', input: true },
-          ],
-        },
-      ],
-    })
+    // LocalNotifications.registerActionTypes({
+    //   types: [
+    //     {
+    //       id: 'CHAT_MSG',
+    //       actions: [
+    //         { id: 'view', title: 'Open Chat' },
+    //         { id: 'remove', title: 'Dismiss', destructive: true },
+    //         { id: 'responde', title: 'Responde', input: true },
+    //       ],
+    //     },
+    //   ],
+    // })
   }
 
   async getExpensesMonth(monthYear: MonthYear) {
@@ -79,19 +83,44 @@ export class HomePageComponent implements OnInit {
         },
       ],
     })
+
+    LocalNotifications.addListener(
+      'localNotificationReceived',
+      (notification: LocalNotification) => {
+        this.presentAlert(
+          `Received': ${notification.title}`,
+          `Custom Data: ${JSON.stringify(notification.extra)}`,
+        )
+      },
+    )
+
+    LocalNotifications.addListener(
+      'localNotificationActionPerformed',
+      (notification: LocalNotificationActionPerformed) => {
+        this.presentAlert(
+          `Perfomed': ${notification.actionId}`,
+          `Input value: ${JSON.stringify(notification.inputValue)}`,
+        )
+      },
+    )
   }
 
   async scheduleAvanced() {
     await LocalNotifications.schedule({
       notifications: [
         {
-          id: 1,
-          title: 'Agendada!',
-          body: 'Teste Notificacao',
+          title: 'PAGA A CONTA PARCEIRO',
+          body: 'Join the Ionic Academy',
+          id: 2,
           extra: {
-            data: 'Dado no header',
+            data: 'Pass data to yout handler',
           },
           iconColor: '#0000FF',
+          actionTypeId: 'CHAT_MSG',
+          attachments: [
+            { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
+          ],
+          schedule: { at: new Date(Date.now() + 1000 * 3) },
         },
       ],
     })
@@ -106,5 +135,13 @@ export class HomePageComponent implements OnInit {
         buttons: ['OK'],
       })
       .then(alert => alert.present())
+  }
+
+  async presentAlert(header, message) {
+    const alert = await this.alertCtrl.create({
+      header,
+      message,
+      buttons: ['OK'],
+    })
   }
 }
