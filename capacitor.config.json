@@ -1,24 +1,20 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "ionic-app-base",
+  "appId": "com.controlegastos.app",
+  "appName": "ControleDeGastos",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
+    },
+    "LocalNotifications": {
+      "iconColor": "#FF0000"
     }
   },
   "cordova": {
     "preferences": {
-      "ScrollEnabled": "false",
-      "BackupWebStorage": "none",
-      "SplashMaintainAspectRatio": "true",
-      "FadeSplashScreenDuration": "300",
-      "SplashShowOnlyFirstTime": "false",
-      "SplashScreen": "screen",
-      "SplashScreenDelay": "3000"
+      "DisableDeploy": "true"
     }
-  },
-  "linuxAndroidStudioPath": "/home/vinicius/.local/share/JetBrains/Toolbox/apps/AndroidStudio/ch-0/201.6858069/bin/studio.sh"
+  }
 }
