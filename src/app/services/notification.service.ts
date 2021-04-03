@@ -1,68 +1,109 @@
+import { AlertController } from '@ionic/angular'
 import { Injectable } from '@angular/core'
 import {
-  Plugins,
-  PushNotification,
-  PushNotificationToken,
-  PushNotificationActionPerformed,
   Capacitor,
+  LocalNotification,
+  LocalNotificationActionPerformed,
+  Plugins,
 } from '@capacitor/core'
-import { Router } from '@angular/router'
-
-const { PushNotifications } = Plugins
+const { LocalNotifications } = Plugins
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private router: Router) {}
+  constructor(private alertCtrl: AlertController) {}
 
-  initPush() {
+  async RequestPermission() {
     if (Capacitor.platform !== 'web') {
-      this.registerPush()
+      await LocalNotifications.requestPermission()
+      this.registerNotificationsTypes()
     }
   }
 
-  private registerPush() {
-    PushNotifications.requestPermission().then(permission => {
-      if (permission.granted) {
-        // Register with Apple / Google to receive push via APNS/FCM
-        PushNotifications.register()
-      } else {
-        // No permission for push granted
-      }
+  async scheduleBasic() {
+    if (Capacitor.platform !== 'web') {
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            id: 1,
+            title: 'Agendada!',
+            body: 'Teste Notificacao',
+            extra: {
+              data: 'Dado no header',
+            },
+            iconColor: '#0000FF',
+          },
+        ],
+      })
+
+      LocalNotifications.addListener(
+        'localNotificationReceived',
+        (notification: LocalNotification) => {
+          this.presentAlert(
+            `Received': ${notification.title}`,
+            `Custom Data: ${JSON.stringify(notification.extra)}`,
+          )
+        },
+      )
+
+      LocalNotifications.addListener(
+        'localNotificationActionPerformed',
+        (notification: LocalNotificationActionPerformed) => {
+          this.presentAlert(
+            `Perfomed': ${notification.actionId}`,
+            `Input value: ${JSON.stringify(notification.inputValue)}`,
+          )
+        },
+      )
+    }
+  }
+
+  async scheduleAvanced() {
+    if (Capacitor.platform !== 'web') {
+      await LocalNotifications.schedule({
+        notifications: [
+          {
+            title: 'PAGA A CONTA PARCEIRO',
+            body: 'Join the Ionic Academy',
+            id: 2,
+            extra: {
+              data: 'Pass data to yout handler',
+            },
+            iconColor: '#0000FF',
+            actionTypeId: 'CHAT_MSG',
+            attachments: [
+              { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
+            ],
+            schedule: { at: new Date(Date.now() + 1000 * 3) },
+          },
+        ],
+      })
+    }
+  }
+
+  private registerNotificationsTypes() {
+    if (Capacitor.platform !== 'web') {
+      // LocalNotifications.registerActionTypes({
+      //   types: [
+      //     {
+      //       id: 'CHAT_MSG',
+      //       actions: [
+      //         { id: 'view', title: 'Open Chat' },
+      //         { id: 'remove', title: 'Dismiss', destructive: true },
+      //         { id: 'responde', title: 'Responde', input: true },
+      //       ],
+      //     },
+      //   ],
+      // })
+    }
+  }
+
+  private async presentAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header,
+      message,
+      buttons: ['OK'],
     })
-
-    PushNotifications.addListener(
-      'registration',
-      (token: PushNotificationToken) => {
-        console.log('My token: ' + JSON.stringify(token))
-      },
-    )
-
-    PushNotifications.addListener('registrationError', (error: any) => {
-      console.log('Error: ' + JSON.stringify(error))
-    })
-
-    PushNotifications.addListener(
-      'pushNotificationReceived',
-      async (notification: PushNotification) => {
-        console.log('Push received: ' + JSON.stringify(notification))
-      },
-    )
-
-    PushNotifications.addListener(
-      'pushNotificationActionPerformed',
-      async (notification: PushNotificationActionPerformed) => {
-        const data = notification.notification.data
-        console.log(
-          'Action performed: ' + JSON.stringify(notification.notification),
-        )
-        if (data.detailsId) {
-          alert(data)
-          console.log(data)
-          // this.router.navigateByUrl(`/home/${data.detailsId}`);
-        }
-      },
-    )
   }
 }
