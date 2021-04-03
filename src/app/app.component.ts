@@ -16,7 +16,7 @@ import {
   LocalNotificationActionPerformed,
   Plugins,
 } from '@capacitor/core'
-import { NOTIFICATION_TYPE } from './services/notification.service'
+import { NotificationService } from './services/notification.service'
 
 const { LocalNotifications } = Plugins
 
@@ -38,6 +38,7 @@ export class AppComponent {
     private activatedRoute: ActivatedRoute,
     private alertCtrl: AlertController,
     private dataExpensesService: DataExpensesService,
+    private notificationService: NotificationService,
   ) {
     this.initializeApp()
 
@@ -57,34 +58,7 @@ export class AppComponent {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
 
-      if (Capacitor.platform !== 'web') {
-        LocalNotifications.addListener(
-          'localNotificationReceived',
-          (notification: LocalNotification) => {
-            this.presentAlert(
-              `Received': ${notification.title}`,
-              `Custom Data: ${JSON.stringify(notification.extra)}`,
-            )
-          },
-        )
-
-        LocalNotifications.addListener(
-          'localNotificationActionPerformed',
-          (notification: LocalNotificationActionPerformed) => {
-            this.presentAlert(
-              `Perfomed': ${notification.actionId}`,
-              `expense id: ${notification.notification.extra.data.expenseId}`,
-            )
-
-            switch (notification.actionId) {
-              case 'pay':
-                this.setPaidExpense(
-                  notification.notification.extra.data.expenseId,
-                )
-            }
-          },
-        )
-      }
+      this.addListenersNotifications()
     })
   }
 
@@ -95,12 +69,74 @@ export class AppComponent {
     else this.title = defaultTitle
   }
 
+  private addListenersNotifications() {
+    if (Capacitor.platform !== 'web') {
+      LocalNotifications.addListener(
+        'localNotificationReceived',
+        (notification: LocalNotification) => {
+          // this.presentAlert(
+          //   `Received': ${notification.title}`,
+          //   `Custom Data: ${JSON.stringify(notification.extra)}`,
+          // )
+
+          console.log('notification received: ', notification)
+        },
+      )
+
+      LocalNotifications.addListener(
+        'localNotificationActionPerformed',
+        (notification: LocalNotificationActionPerformed) => {
+          // todo: remover
+          // this.presentAlert(
+          //   `Perfomed': ${notification.actionId}`,
+          //   `expense id: ${notification.notification.extra.data.expenseId}`,
+          // )
+
+          switch (notification.actionId) {
+            case 'pay':
+              this.setPaidExpense(
+                notification.notification.extra.data.expenseId,
+              )
+              break
+            case 'reschedule':
+              const data = notification.notification.extra.data
+              this.rescheduleNotification(
+                data.expenseId,
+                data.expenseTitle,
+                data.expenseDueDate,
+                data.expenseValue,
+              )
+              break
+          }
+        },
+      )
+    }
+  }
+
   private setPaidExpense(expenseId: string) {
     this.dataExpensesService.PaidExpense(expenseId).then(() => {
       console.log('chamou paid')
       // todo: adiconar tooltip de sucesso
       this.router.navigate(['/home'])
     })
+  }
+
+  private rescheduleNotification(
+    expenseId: string,
+    expenseTitle: string,
+    expenseDueDate: Date,
+    expenseValue: number,
+  ) {
+    this.notificationService
+      .scheduleExpenseExpirationNotificationRescheduled(
+        expenseId,
+        expenseTitle,
+        expenseDueDate,
+        expenseValue,
+      )
+      .then(() => {
+        // todo: adiconar tooltip de sucesso
+      })
   }
 
   private async presentAlert(header: string, message: string) {

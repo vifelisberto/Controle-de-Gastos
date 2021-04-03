@@ -23,46 +23,84 @@ export class NotificationService {
   ) {
     if (this.platformAccepted()) {
       const formattedDueDate = moment(expenseDueDate).format('DD/MMM/YYYY')
+      const scheduleDate = moment(expenseDueDate).add(-1, 'd').toDate()
+
+      // todo: remover essa notificação, pois é só teste
+      const notification = {
+        id: Number(expenseId.replace(/\D/g, '')),
+        title: `Sua despesa com ${expenseTitle} está próxima do vencimento`,
+        body: `TEST:VOCÊ IRÁ RECEBER ESSA NOTIFICAÇÃO 1 DIA ANTES Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
+        extra: {
+          data: { expenseId, expenseTitle, expenseDueDate, expenseValue },
+        },
+        actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+      }
 
       await LocalNotifications.schedule({
         notifications: [
+          { ...notification, id: Date.now() },
           {
-            id: Date.now(),
-            title: `Sua despesa com ${expenseTitle} está próxima do vencimento`,
-            body: `Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
-            extra: {
-              data: { expenseId },
-            },
-            iconColor: '#0000FF',
-            actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+            ...notification,
+            schedule: { at: scheduleDate },
           },
         ],
       })
+
+      console.log(
+        'notificação da despesa: ',
+        expenseId,
+        ' agendada para: ',
+        scheduleDate,
+      )
     }
   }
 
-  async scheduleAvanced() {
+  async scheduleExpenseExpirationNotificationRescheduled(
+    expenseId: string,
+    expenseTitle: string,
+    expenseDueDate: Date,
+    expenseValue: number,
+  ) {
     if (this.platformAccepted()) {
       await LocalNotifications.schedule({
         notifications: [
           {
-            title: 'PAGA A CONTA PARCEIRO',
-            body: 'Join the Ionic Academy',
-            id: 2,
+            id: Date.now(),
+            title: `Sua despesa com ${expenseTitle} vence hoje`,
+            body: `Não esqueça de efetuar o pagamento de R$${expenseValue}`,
             extra: {
-              data: 'Pass data to yout handler',
+              data: { expenseId },
             },
-            iconColor: '#0000FF',
-            actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
-            attachments: [
-              { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
-            ],
-            schedule: { at: new Date(Date.now() + 1000 * 3) },
+            actionTypeId: NOTIFICATION_TYPE.EXPENSE_SIMPLE,
+            schedule: { at: expenseDueDate },
           },
         ],
       })
     }
   }
+
+  // async scheduleAvanced() {
+  //   if (this.platformAccepted()) {
+  //     await LocalNotifications.schedule({
+  //       notifications: [
+  //         {
+  //           title: 'PAGA A CONTA PARCEIRO',
+  //           body: 'Join the Ionic Academy',
+  //           id: 2,
+  //           extra: {
+  //             data: 'Pass data to yout handler',
+  //           },
+  //           iconColor: '#0000FF',
+  //           actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+  //           attachments: [
+  //             { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
+  //           ],
+  //           schedule: { at: new Date(Date.now() + 1000 * 3) },
+  //         },
+  //       ],
+  //     })
+  //   }
+  // }
 
   private registerNotificationsTypes() {
     if (this.platformAccepted()) {
@@ -79,6 +117,10 @@ export class NotificationService {
               },
             ],
           },
+          {
+            id: NOTIFICATION_TYPE.EXPENSE_SIMPLE,
+            actions: [{ id: 'pay', title: 'Pago', destructive: true }],
+          },
         ],
       })
     }
@@ -90,4 +132,5 @@ export class NotificationService {
 export enum NOTIFICATION_TYPE {
   EXPENSE_EXPIRATION = 'EXPENSE_EXPIRATION',
   EXPENSE_OVERDUE = 'EXPENSE_OVERDUE',
+  EXPENSE_SIMPLE = 'EXPENSE_SIMPLE',
 }

@@ -144,7 +144,6 @@ export class DataExpensesService {
 
   public async PaidExpense(id: string) {
     if (id) {
-      debugger
       const expense = await this.getExpenseById(id)
       expense.paid = true
 
