@@ -1,5 +1,6 @@
+import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { Component } from '@angular/core'
-import { Platform } from '@ionic/angular'
+import { AlertController, Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import {
@@ -9,6 +10,15 @@ import {
   ActivatedRoute,
   NavigationEnd,
 } from '@angular/router'
+import {
+  Capacitor,
+  LocalNotification,
+  LocalNotificationActionPerformed,
+  Plugins,
+} from '@capacitor/core'
+import { NOTIFICATION_TYPE } from './services/notification.service'
+
+const { LocalNotifications } = Plugins
 
 @Component({
   selector: 'app-root',
@@ -26,6 +36,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private alertCtrl: AlertController,
+    private dataExpensesService: DataExpensesService,
   ) {
     this.initializeApp()
 
@@ -44,6 +56,35 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
+
+      if (Capacitor.platform !== 'web') {
+        LocalNotifications.addListener(
+          'localNotificationReceived',
+          (notification: LocalNotification) => {
+            this.presentAlert(
+              `Received': ${notification.title}`,
+              `Custom Data: ${JSON.stringify(notification.extra)}`,
+            )
+          },
+        )
+
+        LocalNotifications.addListener(
+          'localNotificationActionPerformed',
+          (notification: LocalNotificationActionPerformed) => {
+            this.presentAlert(
+              `Perfomed': ${notification.actionId}`,
+              `expense id: ${notification.notification.extra.data.expenseId}`,
+            )
+
+            switch (notification.actionId) {
+              case 'pay':
+                this.setPaidExpense(
+                  notification.notification.extra.data.expenseId,
+                )
+            }
+          },
+        )
+      }
     })
   }
 
@@ -52,5 +93,22 @@ export class AppComponent {
 
     if (newTitle) this.title = newTitle
     else this.title = defaultTitle
+  }
+
+  private setPaidExpense(expenseId: string) {
+    this.dataExpensesService.PaidExpense(expenseId).then(() => {
+      console.log('chamou paid')
+      // todo: adiconar tooltip de sucesso
+      this.router.navigate(['/home'])
+    })
+  }
+
+  private async presentAlert(header: string, message: string) {
+    const alert = await this.alertCtrl.create({
+      header,
+      message,
+      buttons: ['OK'],
+    })
+    alert.present()
   }
 }

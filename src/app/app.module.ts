@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'
+import { NgModule, LOCALE_ID } from '@angular/core'
 import { BrowserModule } from '@angular/platform-browser'
 import { RouteReuseStrategy } from '@angular/router'
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular'
@@ -10,7 +10,7 @@ import { CreateExpenseComponent } from './components/create-expense/create-expen
 import { HomePageComponent } from './home/home.page'
 import { ExpenseItemsComponent } from './components/expense-items/expense-items.component'
 import { MonthYearSelectComponent } from './components/month-year-select/month-year-select.component'
-import { CommonModule } from '@angular/common'
+import { CommonModule, registerLocaleData } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MenuComponent } from './components/menu/menu.component'
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
@@ -23,6 +23,8 @@ import { AngularFireAuthModule } from '@angular/fire/auth'
 import { AngularFireDatabaseModule } from '@angular/fire/database'
 import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { environment } from '../environments/environment'
+import localePt from '@angular/common/locales/pt'
+registerLocaleData(localePt)
 
 @NgModule({
   declarations: [
@@ -56,6 +58,7 @@ import { environment } from '../environments/environment'
     SplashScreen,
     AngularFirestoreModule,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: LOCALE_ID, useValue: 'pt-BR' },
   ],
   bootstrap: [AppComponent],
 })
