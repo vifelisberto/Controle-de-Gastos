@@ -62,7 +62,12 @@ export class DataExpensesService {
       this.setControlExpenses(this.yearsAndMonths)
 
       this.notificationService.RequestPermission()
-      this.notificationService.scheduleBasic()
+      this.notificationService.scheduleExpenseExpirationNotification(
+        expense.id,
+        expense.title,
+        new Date(expense.dueDate),
+        expense.value,
+      )
 
       return true
     }
@@ -134,6 +139,15 @@ export class DataExpensesService {
               }
             }
         }
+    }
+  }
+
+  public async PaidExpense(id: string) {
+    if (id) {
+      const expense = await this.getExpenseById(id)
+      expense.paid = true
+
+      await this.updateExpense(expense)
     }
   }
 

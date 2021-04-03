@@ -1,109 +1,136 @@
-import { AlertController } from '@ionic/angular'
 import { Injectable } from '@angular/core'
-import {
-  Capacitor,
-  LocalNotification,
-  LocalNotificationActionPerformed,
-  Plugins,
-} from '@capacitor/core'
+import { Capacitor, Plugins } from '@capacitor/core'
 const { LocalNotifications } = Plugins
+import * as moment from 'moment'
+moment.locale('pt')
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
-  constructor(private alertCtrl: AlertController) {}
-
   async RequestPermission() {
-    if (Capacitor.platform !== 'web') {
+    if (this.platformAccepted()) {
       await LocalNotifications.requestPermission()
       this.registerNotificationsTypes()
     }
   }
 
-  async scheduleBasic() {
-    if (Capacitor.platform !== 'web') {
+  async scheduleExpenseExpirationNotification(
+    expenseId: string,
+    expenseTitle: string,
+    expenseDueDate: Date,
+    expenseValue: number,
+  ) {
+    if (this.platformAccepted()) {
+      const formattedDueDate = moment(expenseDueDate).format('DD/MMM/YYYY')
+      const scheduleDate = moment(expenseDueDate).add(-1, 'd').toDate()
+
+      // todo: remover essa notificação, pois é só teste
+      const notification = {
+        id: Number(expenseId.replace(/\D/g, '')),
+        title: `Sua despesa com ${expenseTitle} está próxima do vencimento`,
+        body: `TEST:VOCÊ IRÁ RECEBER ESSA NOTIFICAÇÃO 1 DIA ANTES Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
+        extra: {
+          data: { expenseId, expenseTitle, expenseDueDate, expenseValue },
+        },
+        actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+      }
+
       await LocalNotifications.schedule({
         notifications: [
+          { ...notification, id: Date.now() },
           {
-            id: 1,
-            title: 'Agendada!',
-            body: 'Teste Notificacao',
-            extra: {
-              data: 'Dado no header',
-            },
-            iconColor: '#0000FF',
+            ...notification,
+            schedule: { at: scheduleDate },
           },
         ],
       })
 
-      LocalNotifications.addListener(
-        'localNotificationReceived',
-        (notification: LocalNotification) => {
-          this.presentAlert(
-            `Received': ${notification.title}`,
-            `Custom Data: ${JSON.stringify(notification.extra)}`,
-          )
-        },
-      )
-
-      LocalNotifications.addListener(
-        'localNotificationActionPerformed',
-        (notification: LocalNotificationActionPerformed) => {
-          this.presentAlert(
-            `Perfomed': ${notification.actionId}`,
-            `Input value: ${JSON.stringify(notification.inputValue)}`,
-          )
-        },
+      console.log(
+        'notificação da despesa: ',
+        expenseId,
+        ' agendada para: ',
+        scheduleDate,
       )
     }
   }
 
-  async scheduleAvanced() {
-    if (Capacitor.platform !== 'web') {
+  async scheduleExpenseExpirationNotificationRescheduled(
+    expenseId: string,
+    expenseTitle: string,
+    expenseDueDate: Date,
+    expenseValue: number,
+  ) {
+    if (this.platformAccepted()) {
       await LocalNotifications.schedule({
         notifications: [
           {
-            title: 'PAGA A CONTA PARCEIRO',
-            body: 'Join the Ionic Academy',
-            id: 2,
+            id: Date.now(),
+            title: `Sua despesa com ${expenseTitle} vence hoje`,
+            body: `Não esqueça de efetuar o pagamento de R$${expenseValue}`,
             extra: {
-              data: 'Pass data to yout handler',
+              data: { expenseId },
             },
-            iconColor: '#0000FF',
-            actionTypeId: 'CHAT_MSG',
-            attachments: [
-              { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
-            ],
-            schedule: { at: new Date(Date.now() + 1000 * 3) },
+            actionTypeId: NOTIFICATION_TYPE.EXPENSE_SIMPLE,
+            schedule: { at: expenseDueDate },
           },
         ],
       })
     }
   }
+
+  // async scheduleAvanced() {
+  //   if (this.platformAccepted()) {
+  //     await LocalNotifications.schedule({
+  //       notifications: [
+  //         {
+  //           title: 'PAGA A CONTA PARCEIRO',
+  //           body: 'Join the Ionic Academy',
+  //           id: 2,
+  //           extra: {
+  //             data: 'Pass data to yout handler',
+  //           },
+  //           iconColor: '#0000FF',
+  //           actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+  //           attachments: [
+  //             { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
+  //           ],
+  //           schedule: { at: new Date(Date.now() + 1000 * 3) },
+  //         },
+  //       ],
+  //     })
+  //   }
+  // }
 
   private registerNotificationsTypes() {
-    if (Capacitor.platform !== 'web') {
-      // LocalNotifications.registerActionTypes({
-      //   types: [
-      //     {
-      //       id: 'CHAT_MSG',
-      //       actions: [
-      //         { id: 'view', title: 'Open Chat' },
-      //         { id: 'remove', title: 'Dismiss', destructive: true },
-      //         { id: 'responde', title: 'Responde', input: true },
-      //       ],
-      //     },
-      //   ],
-      // })
+    if (this.platformAccepted()) {
+      LocalNotifications.registerActionTypes({
+        types: [
+          {
+            id: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+            actions: [
+              { id: 'pay', title: 'Pago', destructive: true },
+              {
+                id: 'reschedule',
+                title: 'Notificar novamente',
+                destructive: true,
+              },
+            ],
+          },
+          {
+            id: NOTIFICATION_TYPE.EXPENSE_SIMPLE,
+            actions: [{ id: 'pay', title: 'Pago', destructive: true }],
+          },
+        ],
+      })
     }
   }
 
-  private async presentAlert(header: string, message: string) {
-    const alert = await this.alertCtrl.create({
-      header,
-      message,
-      buttons: ['OK'],
-    })
-  }
+  private platformAccepted = () => Capacitor.platform !== 'web'
+}
+
+export enum NOTIFICATION_TYPE {
+  EXPENSE_EXPIRATION = 'EXPENSE_EXPIRATION',
+  EXPENSE_OVERDUE = 'EXPENSE_OVERDUE',
+  EXPENSE_SIMPLE = 'EXPENSE_SIMPLE',
 }
