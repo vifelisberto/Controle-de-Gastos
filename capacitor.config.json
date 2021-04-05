@@ -11,6 +11,11 @@
     "LocalNotifications": {
       "smallIcon": "ic_notification",
       "iconColor": "#40a75b"
+    },
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "826428829065-tokn8lb1nr0hp5v8hm8te1a44r5ps6r1.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
     }
   },
   "cordova": {

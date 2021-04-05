@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
 import { Router } from '@angular/router'
 import { AuthenticationService } from '../shared/authentication-service'
-
+import '@codetrix-studio/capacitor-google-auth'
+import { Plugins } from '@capacitor/core'
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -30,4 +31,12 @@ export class LoginPage implements OnInit {
         window.alert(error.message)
       })
   }
+
+  // userInfo = null;
+  // constructor() { }
+  // async googleSignup() {
+  //   const googleUser = await Plugins.GoogleAuth.signIn(null) as any;
+  //   console.log('my user: ', googleUser);
+  //   this.userInfo = googleUser;
+  // }
 }
