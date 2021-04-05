@@ -15,28 +15,7 @@ export class LoginPage implements OnInit {
   ) {}
 
   ngOnInit() {}
-
-  logIn(email, password) {
-    this.authService
-      .SignIn(email.value, password.value)
-      .then(res => {
-        if (this.authService.isEmailVerified) {
-          this.router.navigate(['home'])
-        } else {
-          window.alert('Email is not verified')
-          return false
-        }
-      })
-      .catch(error => {
-        window.alert(error.message)
-      })
+  async googleSignup() {
+    ;(await Plugins.GoogleAuth.signIn) as any
   }
-
-  // userInfo = null;
-  // constructor() { }
-  // async googleSignup() {
-  //   const googleUser = await Plugins.GoogleAuth.signIn(null) as any;
-  //   console.log('my user: ', googleUser);
-  //   this.userInfo = googleUser;
-  // }
 }
