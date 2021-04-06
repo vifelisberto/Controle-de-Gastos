@@ -1,27 +1,6 @@
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-img
-        class="center"
-        style="width: 120px; height: 120px"
-        src="/assets/logo/logo-controle-de-gastos.png"
-      ></ion-img>
-    </ion-row>
-    <ion-row>
-      <ion-col style="text-align: center"> Controle de Gastos </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="centered-button">
-        <ion-button
-          type="submit"
-          color="primary"
-          (click)="authService.GoogleAuth()"
-          expand="block"
-        >
-          Entrar com Google
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-button (click)="googleSignup()">Sign in</ion-button>
+  <ion-card>
+    <ion-card-content> {{ userInfo | json}} </ion-card-content>
+  </ion-card>
 </ion-content>
-<!-- (click)="googleSignup()" -->
