@@ -61,12 +61,13 @@ export class DataExpensesService {
 
       this.setControlExpenses(this.yearsAndMonths)
 
-      this.notificationService.scheduleExpenseExpiration(
-        expense.id,
-        expense.title,
-        new Date(expense.dueDate),
-        expense.value,
-      )
+      if (!expense.paid)
+        this.notificationService.scheduleExpenseExpiration(
+          expense.id,
+          expense.title,
+          new Date(expense.dueDate),
+          expense.value,
+        )
 
       return true
     }
