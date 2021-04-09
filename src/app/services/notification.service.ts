@@ -25,26 +25,18 @@ export class NotificationService {
       const formattedDueDate = moment(expenseDueDate).format('DD/MMM/YYYY')
       const scheduleDate = moment(expenseDueDate).add(-1, 'd').toDate()
 
-      // todo: remover essa notificação, pois é só teste
       const notification = {
         id: Number(expenseId.replace(/\D/g, '')),
         title: `Sua despesa com ${expenseTitle} está próxima do vencimento`,
-        body: `TEST:VOCÊ IRÁ RECEBER ESSA NOTIFICAÇÃO 1 DIA ANTES Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
+        body: `Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
         extra: {
           data: { expenseId, expenseTitle, expenseDueDate, expenseValue },
         },
         actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+        schedule: { at: scheduleDate },
       }
 
-      await LocalNotifications.schedule({
-        notifications: [
-          { ...notification, id: Date.now() },
-          {
-            ...notification,
-            schedule: { at: scheduleDate },
-          },
-        ],
-      })
+      await LocalNotifications.schedule({ notifications: [notification] })
 
       console.log(
         'notificação da despesa: ',
