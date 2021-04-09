@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core'
-import { Capacitor, Plugins } from '@capacitor/core'
+import {
+  Capacitor,
+  LocalNotification,
+  LocalNotificationRequest,
+  Plugins,
+} from '@capacitor/core'
 const { LocalNotifications } = Plugins
 import * as moment from 'moment'
 moment.locale('pt')
@@ -8,98 +13,61 @@ moment.locale('pt')
   providedIn: 'root',
 })
 export class NotificationService {
-  async RequestPermission() {
-    if (this.platformAccepted()) {
-      await LocalNotifications.requestPermission()
-      this.registerNotificationsTypes()
-    }
+  constructor() {
+    LocalNotifications.requestPermission().then(() =>
+      this.registerNotificationTypes(),
+    )
   }
 
-  async scheduleExpenseExpirationNotification(
+  async scheduleExpenseExpiration(
     expenseId: string,
     expenseTitle: string,
     expenseDueDate: Date,
     expenseValue: number,
+    reschedule: boolean = false,
   ) {
-    if (this.platformAccepted()) {
-      const formattedDueDate = moment(expenseDueDate).format('DD/MMM/YYYY')
-      const scheduleDate = moment(expenseDueDate).add(-1, 'd').toDate()
+    const formattedDueDate = moment(expenseDueDate).format('DD/MMM/YYYY')
+    const scheduleDate = reschedule
+      ? expenseDueDate
+      : moment(expenseDueDate).add(-1, 'd').toDate()
+    const notificationId = this.getOnlyNumbers(expenseId)
 
-      const notification = {
-        id: Number(expenseId.replace(/\D/g, '')),
-        title: `Sua despesa com ${expenseTitle} está próxima do vencimento`,
-        body: `Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
-        extra: {
-          data: { expenseId, expenseTitle, expenseDueDate, expenseValue },
-        },
-        actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
-        schedule: { at: scheduleDate },
-      }
+    this.scheduleNotification({
+      id: notificationId + Math.random(),
+      title: `Sua despesa com ${expenseTitle} está próxima do vencimento ${Math.random()}`,
+      body: `Não esqueça de efetuar o pagamento de R$${expenseValue} até ${formattedDueDate}`,
+      extra: {
+        data: { expenseId, expenseTitle, expenseDueDate, expenseValue },
+      },
+      actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION.toString(),
+      schedule: { at: scheduleDate },
+    })
 
+    console.log(
+      `Notificação da despesa: ${expenseId} agendada para: ${scheduleDate}`,
+    )
+  }
+
+  async cancelNotificationScheduleByExpenseId(expenseId: string) {
+    const notifications: LocalNotificationRequest[] = [
+      { id: `${this.getOnlyNumbers(expenseId)}` },
+    ]
+    await LocalNotifications.cancel({ notifications })
+
+    console.log(`Notificação da despesa: ${expenseId} cancelada`)
+  }
+
+  private async scheduleNotification(notification: LocalNotification) {
+    if (this.platformAccepted())
       await LocalNotifications.schedule({ notifications: [notification] })
-
-      console.log(
-        'notificação da despesa: ',
-        expenseId,
-        ' agendada para: ',
-        scheduleDate,
-      )
-    }
   }
 
-  async scheduleExpenseExpirationNotificationRescheduled(
-    expenseId: string,
-    expenseTitle: string,
-    expenseDueDate: Date,
-    expenseValue: number,
-  ) {
-    if (this.platformAccepted()) {
-      await LocalNotifications.schedule({
-        notifications: [
-          {
-            id: Date.now(),
-            title: `Sua despesa com ${expenseTitle} vence hoje`,
-            body: `Não esqueça de efetuar o pagamento de R$${expenseValue}`,
-            extra: {
-              data: { expenseId },
-            },
-            actionTypeId: NOTIFICATION_TYPE.EXPENSE_SIMPLE,
-            schedule: { at: expenseDueDate },
-          },
-        ],
-      })
-    }
-  }
-
-  // async scheduleAvanced() {
-  //   if (this.platformAccepted()) {
-  //     await LocalNotifications.schedule({
-  //       notifications: [
-  //         {
-  //           title: 'PAGA A CONTA PARCEIRO',
-  //           body: 'Join the Ionic Academy',
-  //           id: 2,
-  //           extra: {
-  //             data: 'Pass data to yout handler',
-  //           },
-  //           iconColor: '#0000FF',
-  //           actionTypeId: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
-  //           attachments: [
-  //             { id: 'face', url: 'res://public/assets/image/dolar_user.png' },
-  //           ],
-  //           schedule: { at: new Date(Date.now() + 1000 * 3) },
-  //         },
-  //       ],
-  //     })
-  //   }
-  // }
-
-  private registerNotificationsTypes() {
+  private registerNotificationTypes() {
     if (this.platformAccepted()) {
       LocalNotifications.registerActionTypes({
         types: [
           {
-            id: NOTIFICATION_TYPE.EXPENSE_EXPIRATION,
+            id: NOTIFICATION_TYPE.EXPENSE_EXPIRATION.toString(),
             actions: [
               { id: 'pay', title: 'Pago', destructive: true },
               {
@@ -109,20 +77,22 @@ export class NotificationService {
               },
             ],
           },
-          {
-            id: NOTIFICATION_TYPE.EXPENSE_SIMPLE,
-            actions: [{ id: 'pay', title: 'Pago', destructive: true }],
-          },
         ],
       })
     }
   }
 
-  private platformAccepted = () => Capacitor.platform !== 'web'
+  private getOnlyNumbers = (text: string) => Number(text.replace(/\D/g, ''))
+
+  private platformAccepted() {
+    if (Capacitor.platform === 'web')
+      throw new Error('Plataforma não suportada')
+
+    return true
+  }
 }
 
 export enum NOTIFICATION_TYPE {
-  EXPENSE_EXPIRATION = 'EXPENSE_EXPIRATION',
-  EXPENSE_OVERDUE = 'EXPENSE_OVERDUE',
-  EXPENSE_SIMPLE = 'EXPENSE_SIMPLE',
+  EXPENSE_EXPIRATION,
+  EXPENSE_OVERDUE,
 }

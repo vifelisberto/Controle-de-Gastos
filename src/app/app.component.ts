@@ -128,11 +128,12 @@ export class AppComponent {
     expenseValue: number,
   ) {
     this.notificationService
-      .scheduleExpenseExpirationNotificationRescheduled(
+      .scheduleExpenseExpiration(
         expenseId,
         expenseTitle,
         expenseDueDate,
         expenseValue,
+        true,
       )
       .then(() => {
         // todo: adiconar tooltip de sucesso

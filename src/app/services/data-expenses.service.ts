@@ -61,8 +61,7 @@ export class DataExpensesService {
 
       this.setControlExpenses(this.yearsAndMonths)
 
-      this.notificationService.RequestPermission()
-      this.notificationService.scheduleExpenseExpirationNotification(
+      this.notificationService.scheduleExpenseExpiration(
         expense.id,
         expense.title,
         new Date(expense.dueDate),
@@ -100,6 +99,10 @@ export class DataExpensesService {
                 ) {
                   this.yearsAndMonths[year][month].splice(idx, 1)
 
+                  await this.notificationService.cancelNotificationScheduleByExpenseId(
+                    newExpense.id,
+                  )
+
                   this.addExpense(newExpense)
                 } else {
                   this.yearsAndMonths[year][month][idx] = newExpense
@@ -134,6 +137,11 @@ export class DataExpensesService {
                   this.yearsAndMonths[year][month].splice(idx, 1)
 
                   this.setControlExpenses(this.yearsAndMonths)
+
+                  await this.notificationService.cancelNotificationScheduleByExpenseId(
+                    expenseDelete.id,
+                  )
+
                   return expenseDelete
                 }
               }
@@ -148,6 +156,10 @@ export class DataExpensesService {
       expense.paid = true
 
       await this.updateExpense(expense)
+
+      await this.notificationService.cancelNotificationScheduleByExpenseId(
+        expense.id,
+      )
     }
   }
 
