@@ -1,6 +1,6 @@
 import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { Component } from '@angular/core'
-import { AlertController, Platform } from '@ionic/angular'
+import { Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
 import { StatusBar } from '@ionic-native/status-bar/ngx'
 import {
@@ -17,7 +17,6 @@ import {
   Plugins,
 } from '@capacitor/core'
 import { NotificationService } from './services/notification.service'
-
 const { LocalNotifications } = Plugins
 
 @Component({
@@ -36,7 +35,6 @@ export class AppComponent {
     private statusBar: StatusBar,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private alertCtrl: AlertController,
     private dataExpensesService: DataExpensesService,
     private notificationService: NotificationService,
   ) {
@@ -54,6 +52,8 @@ export class AppComponent {
   }
 
   initializeApp() {
+    LocalNotifications.requestPermission()
+
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
@@ -74,11 +74,6 @@ export class AppComponent {
       LocalNotifications.addListener(
         'localNotificationReceived',
         (notification: LocalNotification) => {
-          // this.presentAlert(
-          //   `Received': ${notification.title}`,
-          //   `Custom Data: ${JSON.stringify(notification.extra)}`,
-          // )
-
           console.log('notification received: ', notification)
         },
       )
@@ -86,12 +81,6 @@ export class AppComponent {
       LocalNotifications.addListener(
         'localNotificationActionPerformed',
         (notification: LocalNotificationActionPerformed) => {
-          // todo: remover
-          // this.presentAlert(
-          //   `Perfomed': ${notification.actionId}`,
-          //   `expense id: ${notification.notification.extra.data.expenseId}`,
-          // )
-
           switch (notification.actionId) {
             case 'pay':
               this.setPaidExpense(
@@ -115,8 +104,7 @@ export class AppComponent {
 
   private setPaidExpense(expenseId: string) {
     this.dataExpensesService.PaidExpense(expenseId).then(() => {
-      console.log('chamou paid')
-      // todo: adiconar tooltip de sucesso
+      console.log(`despesa: ${expenseId} marcada como paga`)
       this.router.navigate(['/home'])
     })
   }
@@ -136,16 +124,7 @@ export class AppComponent {
         true,
       )
       .then(() => {
-        // todo: adiconar tooltip de sucesso
+        console.log(`notificação da despesa ${expenseId} reagendada`)
       })
-  }
-
-  private async presentAlert(header: string, message: string) {
-    const alert = await this.alertCtrl.create({
-      header,
-      message,
-      buttons: ['OK'],
-    })
-    alert.present()
   }
 }
