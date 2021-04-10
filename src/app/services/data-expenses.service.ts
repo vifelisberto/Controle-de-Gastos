@@ -61,13 +61,13 @@ export class DataExpensesService {
 
       this.setControlExpenses(this.yearsAndMonths)
 
-      this.notificationService.RequestPermission()
-      this.notificationService.scheduleExpenseExpirationNotification(
-        expense.id,
-        expense.title,
-        new Date(expense.dueDate),
-        expense.value,
-      )
+      if (!expense.paid)
+        this.notificationService.scheduleExpenseExpiration(
+          expense.id,
+          expense.title,
+          new Date(expense.dueDate),
+          expense.value,
+        )
 
       return true
     }
@@ -99,6 +99,10 @@ export class DataExpensesService {
                   dateExist.getFullYear() !== dateNew.getFullYear()
                 ) {
                   this.yearsAndMonths[year][month].splice(idx, 1)
+
+                  await this.notificationService.cancelNotificationScheduleByExpenseId(
+                    newExpense.id,
+                  )
 
                   this.addExpense(newExpense)
                 } else {
@@ -134,6 +138,11 @@ export class DataExpensesService {
                   this.yearsAndMonths[year][month].splice(idx, 1)
 
                   this.setControlExpenses(this.yearsAndMonths)
+
+                  await this.notificationService.cancelNotificationScheduleByExpenseId(
+                    expenseDelete.id,
+                  )
+
                   return expenseDelete
                 }
               }
@@ -148,6 +157,10 @@ export class DataExpensesService {
       expense.paid = true
 
       await this.updateExpense(expense)
+
+      await this.notificationService.cancelNotificationScheduleByExpenseId(
+        expense.id,
+      )
     }
   }
 
