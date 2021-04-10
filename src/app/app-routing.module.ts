@@ -2,7 +2,6 @@ import { CreateExpenseComponent } from './components/create-expense/create-expen
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
 import { ConfigComponent } from './components/config/config.component'
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
-import { AboutComponent } from './components/about/about.component'
 import { HomePageComponent } from './home/home.page'
 import { NgModule } from '@angular/core'
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router'
@@ -12,11 +11,6 @@ const routes: Routes = [
     path: 'home',
     component: HomePageComponent,
     data: { title: 'Controle de Gastos' },
-  },
-  {
-    path: 'about',
-    component: AboutComponent,
-    data: { title: 'Sobre' },
   },
   {
     path: 'analysis',

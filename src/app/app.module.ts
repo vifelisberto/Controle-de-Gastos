@@ -16,7 +16,6 @@ import { MenuComponent } from './components/menu/menu.component'
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
 import { AnalysisExpensesComponent } from './components/analysis-expenses/analysis-expenses.component'
 import { ConfigComponent } from './components/config/config.component'
-import { AboutComponent } from './components/about/about.component'
 import { IonicStorageModule } from '@ionic/storage'
 import { AngularFireModule } from '@angular/fire'
 import { AngularFireAuthModule } from '@angular/fire/auth'
@@ -37,7 +36,6 @@ registerLocaleData(localePt)
     UpdateExpenseComponent,
     AnalysisExpensesComponent,
     ConfigComponent,
-    AboutComponent,
   ],
   entryComponents: [],
   imports: [
