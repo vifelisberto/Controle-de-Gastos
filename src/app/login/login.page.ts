@@ -12,7 +12,7 @@ export class LoginPage {
 
   constructor() {}
   async googleSignup() {
-    const googleUser = (await Plugins.GoogleAuth.signIn()) as any
+    const googleUser = await Plugins.GoogleAuth.signIn()
     console.log('my user: ', googleUser)
     this.userInfo = googleUser
   }
