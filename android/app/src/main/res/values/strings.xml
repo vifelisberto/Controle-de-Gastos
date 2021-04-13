@@ -4,4 +4,5 @@
     <string name="title_activity_main">ControleDeGastos</string>
     <string name="package_name">com.controlegastos.app</string>
     <string name="custom_url_scheme">com.controlegastos.app</string>
+    <string name="server_client_id">5636877012-goraua7pbbs49ktqg8cpsgn2da7gbjg2.apps.googleusercontent.com</string>
 </resources>

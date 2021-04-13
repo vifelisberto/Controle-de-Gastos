@@ -1,33 +1,19 @@
-import { Component, OnInit } from '@angular/core'
-import { Router } from '@angular/router'
-import { AuthenticationService } from '../shared/authentication-service'
+import { Component } from '@angular/core'
+import '@codetrix-studio/capacitor-google-auth'
+import { Plugins } from '@capacitor/core'
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
-  constructor(
-    public authService: AuthenticationService,
-    public router: Router,
-  ) {}
+export class LoginPage {
+  userInfo = null
 
-  ngOnInit() {}
-
-  logIn(email, password) {
-    this.authService
-      .SignIn(email.value, password.value)
-      .then(res => {
-        if (this.authService.isEmailVerified) {
-          this.router.navigate(['home'])
-        } else {
-          window.alert('Email is not verified')
-          return false
-        }
-      })
-      .catch(error => {
-        window.alert(error.message)
-      })
+  constructor() {}
+  async googleSignup() {
+    const googleUser = await Plugins.GoogleAuth.signIn()
+    console.log('my user: ', googleUser)
+    this.userInfo = googleUser
   }
 }

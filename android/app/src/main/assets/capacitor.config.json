@@ -4,6 +4,7 @@
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
+  "linuxAndroidStudioPath": "/snap/android-studio/current/android-studio/bin/studio.sh",
   "plugins": {
     "SplashScreen": {
       "launchShowDuration": 0
@@ -11,6 +12,11 @@
     "LocalNotifications": {
       "smallIcon": "ic_notification",
       "iconColor": "#40a75b"
+    },
+    "GoogleAuth": {
+      "scopes": ["profile", "email"],
+      "serverClientId": "5636877012-goraua7pbbs49ktqg8cpsgn2da7gbjg2.apps.googleusercontent.com",
+      "forceCodeForRefreshToken": true
     }
   },
   "cordova": {

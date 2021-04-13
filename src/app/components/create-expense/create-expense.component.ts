@@ -1,5 +1,4 @@
 import { ExpenseItem } from './../expense-items/expense-item'
-import { repeat } from './../../services/repeat'
 import { MonthYear } from './../month-year-select/month-year'
 import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { Component } from '@angular/core'
@@ -78,10 +77,10 @@ export class CreateExpenseComponent {
   }
 
   async addNewExpensesRepeat(expense: ExpenseItem, qtyPortion: number) {
-    let dateExpense = new Date(expense.dueDate)
+    const dateExpense = new Date(expense.dueDate)
 
     for (let i = 1; i <= qtyPortion; i++) {
-      let expenseForAdd = { ...expense }
+      const expenseForAdd = { ...expense }
       expenseForAdd.dueDate = `${dateExpense.getFullYear()}-${
         dateExpense.getMonth() + 1 < 10
           ? '0' + (dateExpense.getMonth() + 1)

@@ -1,14 +1,6 @@
-<form>
-  <ion-row>
-    <ion-col>
-      <ion-button
-        type="submit"
-        color="danger"
-        (click)="authService.GoogleAuth()"
-        expand="block"
-      >
-        Login with Google
-      </ion-button>
-    </ion-col>
-  </ion-row>
-</form>
+<ion-content>
+  <ion-button (click)="googleSignup()">Sign in</ion-button>
+  <ion-card>
+    <ion-card-content> {{ userInfo | json}} </ion-card-content>
+  </ion-card>
+</ion-content>
