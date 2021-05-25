@@ -10,7 +10,7 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomePageComponent,
-    data: { title: 'Controle de Gastos' },
+    data: { title: 'Dr. Cash - Controle de Gastos' },
   },
   {
     path: 'analysis',

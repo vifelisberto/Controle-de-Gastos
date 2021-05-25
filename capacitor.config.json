@@ -1,6 +1,6 @@
 {
   "appId": "com.controlegastos.app",
-  "appName": "ControleDeGastos",
+  "appName": "Dr. Cash - Controle de Gastos",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

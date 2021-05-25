@@ -63,7 +63,7 @@ export class AppComponent {
   }
 
   setTitlePage(newTitle: string) {
-    const defaultTitle = 'Controle de Gastos'
+    const defaultTitle = 'Dr. Cash'
 
     if (newTitle) this.title = newTitle
     else this.title = defaultTitle
