@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">ControleDeGastos</string>
-    <string name="title_activity_main">ControleDeGastos</string>
+    <string name="app_name">Dr. Cash - Controle de Gastos</string>
+    <string name="title_activity_main">Dr. Cash - Controle de Gastos</string>
     <string name="package_name">com.controlegastos.app</string>
     <string name="custom_url_scheme">com.controlegastos.app</string>
     <string name="server_client_id">5636877012-goraua7pbbs49ktqg8cpsgn2da7gbjg2.apps.googleusercontent.com</string>
