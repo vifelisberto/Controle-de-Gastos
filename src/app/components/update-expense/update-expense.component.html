@@ -32,17 +32,14 @@
       </ion-datetime>
     </ion-item>
 
-    <ion-item class="padding">
-      <ion-label position="floating">Categoria</ion-label>
-      <ion-select formControlName="category" required="true">
-        <ion-select-option value="1">Educação</ion-select-option>
-        <ion-select-option value="2">Lazer</ion-select-option>
-        <ion-select-option value="3">Alimentação</ion-select-option>
-        <ion-select-option value="4">Transporte</ion-select-option>
-        <ion-select-option value="5">Saúde</ion-select-option>
-        <ion-select-option value="6">Despesas domésticas</ion-select-option>
-        <ion-select-option value="7">Outros</ion-select-option>
-      </ion-select>
+    <ion-item class="padding" (click)="presentActionSheet()">
+      <ion-label *ngIf="!categoryData">Categoria</ion-label>
+      <ion-label *ngIf="categoryData" position="stacked">Categoria</ion-label>
+      <input formControlName="category" type="hidden" required="true" />
+      <p>
+        {{ categoryData?.text }}
+        <ion-icon [name]="categoryData?.icon"></ion-icon>
+      </p>
     </ion-item>
 
     <ion-item class="padding">
