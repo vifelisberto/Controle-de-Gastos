@@ -1,6 +1,34 @@
 <ion-content>
-  <ion-button (click)="googleSignup()">Sign in</ion-button>
-  <ion-card>
-    <ion-card-content> {{ userInfo | json}} </ion-card-content>
-  </ion-card>
+  <div class="formContent">
+    <ion-img
+      src="../../assets/image/DrCashLogo01.png"
+      class="avatarLogo"
+    ></ion-img>
+    <div class="loginForm">
+      <ion-item class="inputEmail" lines="none">
+        <ion-label
+          ><img src="../../assets/image/email.png" width="20px"
+        /></ion-label>
+        <ion-input placeholder="E-mail"></ion-input>
+      </ion-item>
+      <ion-item class="inputSenha" lines="none">
+        <ion-label
+          ><img src="../../assets/image/padlock.png" width="20px"
+        /></ion-label>
+        <ion-input placeholder="Senha"></ion-input>
+      </ion-item>
+      <button id="submitform">
+        <img src="../../assets/image/submitbotton.png" />
+      </button>
+      <div class="buttonsGroup">
+        <button class="googleLogin" (click)="googleSignup()">
+          <img src="../../assets/image/google.png" width="20px" /> Google
+        </button>
+        <button class="registerButton">
+          <img src="../../assets/image/contact-form.png" width="20px" />
+          Cadastrar
+        </button>
+      </div>
+    </div>
+  </div>
 </ion-content>
