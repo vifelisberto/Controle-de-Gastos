@@ -1,11 +1,12 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: 'AIzaSyA9hc500tvFsf3iyOH4VIwYRlR57qWzBSU',
-    authDomain: 'controle-de-gastos-3a9d4.firebaseapp.com',
-    projectId: 'controle-de-gastos-3a9d4',
-    storageBucket: 'controle-de-gastos-3a9d4.appspot.com',
-    messagingSenderId: '826428829065',
-    appId: '1:826428829065:web:5f3b399784c0653dfd8558',
+    apiKey: 'AIzaSyBAczGt5wXvk5tJMQbAtEuctrEh1AUFCOs',
+    authDomain: 'dr-cash---controle-de-gastos.firebaseapp.com',
+    projectId: 'dr-cash---controle-de-gastos',
+    storageBucket: 'dr-cash---controle-de-gastos.appspot.com',
+    messagingSenderId: '5636877012',
+    appId: '1:5636877012:web:b368fb8cf0f3d151156941',
+    measurementId: 'G-B046V44YMN',
   },
 }

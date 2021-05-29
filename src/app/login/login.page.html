@@ -1,5 +1,5 @@
 <ion-content>
-  <div class="formContent">
+  <div class="formContent" *ngIf="!isGoogleLogin">
     <ion-img
       src="../../assets/image/DrCashLogo01.png"
       class="avatarLogo"
@@ -30,5 +30,32 @@
         </button>
       </div>
     </div>
+  </div>
+
+  <div *ngIf="isGoogleLogin">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center"
+          ><b>{{user.displayName}}</b></ion-card-title
+        >
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-img [src]="user.photoURL" style="border-radius: 1px"></ion-img>
+        <ion-item>
+          <ion-label>email:</ion-label>
+          <span>{{user.email}}</span>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-button
+      expand="block"
+      (click)="logout()"
+      color="danger"
+      *ngIf="isGoogleLogin"
+    >
+      Sair
+    </ion-button>
   </div>
 </ion-content>
