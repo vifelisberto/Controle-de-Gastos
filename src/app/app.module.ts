@@ -23,6 +23,7 @@ import { AngularFireDatabaseModule } from '@angular/fire/database'
 import { AngularFirestoreModule } from '@angular/fire/firestore'
 import { environment } from '../environments/environment'
 import localePt from '@angular/common/locales/pt'
+import { CadastroComponent } from './cadastro/cadastro.component'
 registerLocaleData(localePt)
 
 @NgModule({
@@ -36,6 +37,7 @@ registerLocaleData(localePt)
     UpdateExpenseComponent,
     AnalysisExpensesComponent,
     ConfigComponent,
+    CadastroComponent,
   ],
   entryComponents: [],
   imports: [
