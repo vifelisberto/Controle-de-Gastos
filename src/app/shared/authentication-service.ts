@@ -1,124 +1,59 @@
-import { Injectable, NgZone } from '@angular/core'
-import { User } from './user'
+import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { AngularFireAuth } from '@angular/fire/auth'
-import {
-  AngularFirestore,
-  AngularFirestoreDocument,
-} from '@angular/fire/firestore'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { Plugins } from '@capacitor/core'
+import * as firebase from 'firebase'
+import { BehaviorSubject } from 'rxjs'
+import '@codetrix-studio/capacitor-google-auth'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  userData: any
+  userData = new BehaviorSubject(null)
 
-  constructor(
-    public afStore: AngularFirestore,
-    public ngFireAuth: AngularFireAuth,
-    public router: Router,
-    public ngZone: NgZone,
-  ) {
-    this.ngFireAuth.authState.subscribe(user => {
-      if (user) {
-        this.userData = user
-        localStorage.setItem('user', JSON.stringify(this.userData))
-        JSON.parse(localStorage.getItem('user'))
-      } else {
-        localStorage.setItem('user', null)
-        JSON.parse(localStorage.getItem('user'))
-      }
-    })
-  }
-
-  // Login in with email/password
-  SignIn(email, password) {
-    return this.ngFireAuth.signInWithEmailAndPassword(email, password)
-  }
-
-  // Register user with email/password
-  RegisterUser(email, password) {
-    return this.ngFireAuth.createUserWithEmailAndPassword(email, password)
-  }
-
-  // Email verification when new user register
-  SendVerificationMail() {
-    return this.userData.user.sendEmailVerification().then(() => {
-      this.router.navigate(['verify-email'])
-    })
-  }
-
-  // Recover password
-  PasswordRecover(passwordResetEmail) {
-    return this.ngFireAuth
-      .sendPasswordResetEmail(passwordResetEmail)
-      .then(() => {
-        window.alert(
-          'Password reset email has been sent, please check your inbox.',
-        )
-      })
-      .catch(error => {
-        window.alert(error)
-      })
-  }
-
-  // Returns true when user is looged in
-  get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user'))
-    return user !== null && user.emailVerified !== false ? true : false
-  }
-
-  // Returns true when user's email is verified
-  get isEmailVerified(): boolean {
-    const user = JSON.parse(localStorage.getItem('user'))
-    return user.emailVerified !== false ? true : false
-  }
-
-  // Sign in with Gmail
-  GoogleAuth() {
-    const provider = new firebase.auth.GoogleAuthProvider()
-    return this.AuthLogin(provider)
-  }
-
-  // Auth providers
-  AuthLogin(provider) {
-    return this.ngFireAuth
-      .signInWithPopup(provider)
-      .then(result => {
-        this.ngZone.run(() => {
-          this.router.navigate(['home'])
-        })
-        this.SetUserData(result.user)
-      })
-      .catch(error => {
-        window.alert(error)
-      })
-  }
-
-  // Store user in localStorage
-  SetUserData(user) {
-    const userRef: AngularFirestoreDocument<any> = this.afStore.doc(
-      `users/${user.uid}`,
+  constructor(public fireAuth: AngularFireAuth, public router: Router) {
+    this.fireAuth.authState.subscribe(user =>
+      user ? this.setUserData(user) : this.setUserData(null),
     )
-    const userData: User = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-    }
-    return userRef.set(userData, {
-      merge: true,
-    })
   }
 
-  // Sign-out
-  SignOut() {
-    return this.ngFireAuth.signOut().then(() => {
-      localStorage.removeItem('user')
-      this.router.navigate(['login'])
-    })
+  onLoginSuccess(idToken: string, accessToken?: string) {
+    const credential = accessToken
+      ? firebase.default.auth.GoogleAuthProvider.credential(
+          idToken,
+          accessToken,
+        )
+      : firebase.default.auth.GoogleAuthProvider.credential(idToken)
+
+    this.fireAuth
+      .signInWithCredential(credential)
+      .then(success => this.setUserData(success.user))
+      .catch(error => alert(`Erro ao logar: ${error}`))
   }
+
+  async googleSignup() {
+    const googleUser = await Plugins.GoogleAuth.signIn()
+
+    if (googleUser) {
+      const { idToken, accessToken } = googleUser.authentication
+      this.onLoginSuccess(idToken, accessToken)
+    }
+  }
+
+  async logout() {
+    await this.fireAuth.signOut()
+    await Plugins.GoogleAuth.signOut()
+    localStorage.removeItem('user')
+
+    this.router.navigate(['login'])
+  }
+
+  private setUserData(userData: any) {
+    localStorage.setItem('user', JSON.stringify(userData))
+
+    this.userData.next(userData)
+  }
+
+  private getUserData = () => JSON.parse(localStorage.getItem('user'))
 }

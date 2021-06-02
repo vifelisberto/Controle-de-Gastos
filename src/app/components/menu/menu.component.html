@@ -5,8 +5,15 @@
   class="menuNavegate"
 >
   <ion-header>
-    <ion-toolbar color="tertiary">
+    <ion-toolbar color="primary">
       <ion-title>Opções</ion-title>
+    </ion-toolbar>
+
+    <ion-toolbar *ngIf="user" class="user-data">
+      <ion-avatar>
+        <img [src]="user.photoURL" />
+      </ion-avatar>
+      <ion-label>{{ user.displayName }}</ion-label>
     </ion-toolbar>
   </ion-header>
   <ion-content>

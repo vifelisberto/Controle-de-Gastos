@@ -1,0 +1,22 @@
+.menuNavegate {
+  --max-width: 75%;
+}
+.styleTextMenu {
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.alignIcon {
+  display: flex;
+  align-items: center;
+}
+
+.user-data {
+  text-align: center;
+  padding: 15% 0;
+
+  ion-avatar,
+  ion-label {
+    margin: 0 auto;
+    margin-bottom: 4%;
+  }
+}

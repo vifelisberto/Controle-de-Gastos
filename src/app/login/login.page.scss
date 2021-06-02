@@ -71,3 +71,11 @@
   gap: 0.5rem;
   align-items: center;
 }
+
+.card-content {
+  text-align: center;
+
+  ion-avatar {
+    margin: 0 auto;
+  }
+}
