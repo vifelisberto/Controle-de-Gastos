@@ -35,17 +35,15 @@
   <div *ngIf="isGoogleLogin">
     <ion-card>
       <ion-card-header>
-        <ion-card-title class="ion-text-center"
-          >Bem vindo <b>{{user?.displayName}}!</b></ion-card-title
-        >
+        <ion-card-title>Bem vindo <b>{{user?.displayName}}!</b></ion-card-title>
+        <ion-card-subtitle>Perfil: </ion-card-subtitle>
       </ion-card-header>
 
-      <ion-card-content>
-        <ion-img [src]="user?.photoURL" class="profile-image"></ion-img>
-        <ion-item>
-          <ion-label>email:</ion-label>
-          <span>{{user?.email}}</span>
-        </ion-item>
+      <ion-card-content class="card-content">
+        <ion-avatar>
+          <img [src]="user?.photoURL" class="profile-image" />
+        </ion-avatar>
+        <ion-label>Email: {{user?.email}}</ion-label>
       </ion-card-content>
     </ion-card>
 

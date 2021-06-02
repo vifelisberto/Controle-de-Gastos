@@ -72,7 +72,10 @@
   align-items: center;
 }
 
-.profile-image {
-  max-width: 200px;
-  border-radius: 50%;
+.card-content {
+  text-align: center;
+
+  ion-avatar {
+    margin: 0 auto;
+  }
 }
