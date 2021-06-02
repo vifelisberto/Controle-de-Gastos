@@ -36,25 +36,20 @@
     <ion-card>
       <ion-card-header>
         <ion-card-title class="ion-text-center"
-          ><b>{{user.displayName}}</b></ion-card-title
+          >Bem vindo <b>{{user?.displayName}}!</b></ion-card-title
         >
       </ion-card-header>
 
       <ion-card-content>
-        <ion-img [src]="user.photoURL" style="border-radius: 1px"></ion-img>
+        <ion-img [src]="user?.photoURL" class="profile-image"></ion-img>
         <ion-item>
           <ion-label>email:</ion-label>
-          <span>{{user.email}}</span>
+          <span>{{user?.email}}</span>
         </ion-item>
       </ion-card-content>
     </ion-card>
 
-    <ion-button
-      expand="block"
-      (click)="logout()"
-      color="danger"
-      *ngIf="isGoogleLogin"
-    >
+    <ion-button expand="block" (click)="logout()" color="danger">
       Sair
     </ion-button>
   </div>

@@ -17,6 +17,7 @@ import {
   Plugins,
 } from '@capacitor/core'
 import { NotificationService } from './services/notification.service'
+import { AuthenticationService } from './shared/authentication-service'
 const { LocalNotifications } = Plugins
 
 @Component({
@@ -27,6 +28,7 @@ const { LocalNotifications } = Plugins
 export class AppComponent {
   public title: string
   public isHomePage: boolean
+  public user: any
   private homeUrl = '/home'
 
   constructor(
@@ -37,6 +39,7 @@ export class AppComponent {
     private activatedRoute: ActivatedRoute,
     private dataExpensesService: DataExpensesService,
     private notificationService: NotificationService,
+    private authentication: AuthenticationService,
   ) {
     this.initializeApp()
 
@@ -49,6 +52,8 @@ export class AppComponent {
         )
       }
     })
+
+    this.authentication.userData.subscribe(user => (this.user = user))
   }
 
   initializeApp() {
