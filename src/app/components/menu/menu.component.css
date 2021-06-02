@@ -1,0 +1,11 @@
+.menuNavegate {
+  --max-width: 50%;
+}
+.styleTextMenu {
+  font-family: 'Trebuchet MS', sans-serif;
+}
+
+.alignIcon {
+  display: flex;
+  align-items: center;
+}
