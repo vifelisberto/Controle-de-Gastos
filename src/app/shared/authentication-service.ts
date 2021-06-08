@@ -53,6 +53,10 @@ export class AuthenticationService {
     localStorage.setItem('user', JSON.stringify(userData))
 
     this.userData.next(userData)
+
+    if (userData !== null) {
+      this.router.navigate(['home'])
+    }
   }
 
   private getUserData = () => JSON.parse(localStorage.getItem('user'))

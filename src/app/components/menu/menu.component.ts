@@ -9,15 +9,24 @@ import { MenuController } from '@ionic/angular'
 })
 export class MenuComponent {
   user: any
+  isGoogleLogin = false
 
   constructor(
     private menu: MenuController,
     private authenticationService: AuthenticationService,
+    private authentication: AuthenticationService,
   ) {
-    authenticationService.userData.subscribe(user => (this.user = user))
+    authenticationService.userData.subscribe(user => {
+      this.isGoogleLogin = user != null
+      this.user = user
+    })
   }
 
   closeMenu() {
+    this.menu.close()
+  }
+  logout = async () => {
+    await this.authentication.logout()
     this.menu.close()
   }
 }
