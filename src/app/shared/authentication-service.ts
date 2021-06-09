@@ -1,3 +1,4 @@
+import { User } from './user'
 import { Injectable } from '@angular/core'
 import { Router } from '@angular/router'
 import { AngularFireAuth } from '@angular/fire/auth'
@@ -5,14 +6,22 @@ import { Plugins } from '@capacitor/core'
 import * as firebase from 'firebase'
 import { BehaviorSubject } from 'rxjs'
 import '@codetrix-studio/capacitor-google-auth'
+import { AngularFirestore } from '@angular/fire/firestore'
+import { Storage } from '@ionic/storage'
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
   userData = new BehaviorSubject(null)
+  private readonly keyData = 'ControlExpenses'
 
-  constructor(public fireAuth: AngularFireAuth, public router: Router) {
+  constructor(
+    private fireAuth: AngularFireAuth,
+    private router: Router,
+    private fireStore: AngularFirestore,
+    private storage: Storage,
+  ) {
     this.fireAuth.authState.subscribe(user =>
       user ? this.setUserData(user) : this.setUserData(null),
     )
@@ -49,12 +58,26 @@ export class AuthenticationService {
     this.router.navigate(['login'])
   }
 
-  private setUserData(userData: any) {
+  private setUserData(userData: firebase.default.User) {
     localStorage.setItem('user', JSON.stringify(userData))
 
     this.userData.next(userData)
 
     if (userData !== null) {
+      this.storage.get(this.keyData).then(data => {
+        const userDoc = this.fireStore.doc(`user/${userData.uid}`)
+
+        userDoc.set({
+          uuid: userData.uid,
+          birthDate: null,
+          city: null,
+          state: null,
+          contry: null,
+          salaryRange: 1,
+          dataExpenses: data,
+        } as User)
+      })
+
       this.router.navigate(['home'])
     }
   }

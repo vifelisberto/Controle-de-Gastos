@@ -19,5 +19,6 @@ export class LoginPage {
   }
 
   googleSignup = async () => await this.authentication.googleSignup()
+
   logout = async () => await this.authentication.logout()
 }
