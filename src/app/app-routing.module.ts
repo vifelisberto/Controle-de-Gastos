@@ -1,3 +1,4 @@
+import { TutorialComponent } from './tutorial/tutorial.component'
 import { CadastroComponent } from './cadastro/cadastro.component'
 import { CreateExpenseComponent } from './components/create-expense/create-expense.component'
 import { UpdateExpenseComponent } from './components/update-expense/update-expense.component'
@@ -47,6 +48,11 @@ const routes: Routes = [
     path: 'register',
     component: CadastroComponent,
     data: { title: 'Cadastrar Usuario' },
+  },
+  {
+    path: 'tutorial',
+    component: TutorialComponent,
+    data: { title: 'Tutorial App' },
   },
 ]
 

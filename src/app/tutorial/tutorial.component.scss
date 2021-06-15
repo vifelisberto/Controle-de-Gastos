@@ -1,0 +1,32 @@
+ion-slides {
+  height: 100%;
+}
+
+ion-slide {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+ion-slide {
+  color: #888;
+}
+
+.imgSlide1 {
+  width: 40%;
+}
+
+.imgSlide2 {
+  width: 50%;
+}
+
+.imgSlide3 {
+  width: 100%;
+  padding: 16px 0px;
+}
+
+.vamosNessaBtn {
+  --background: #4854e0;
+  color: white;
+  border-radius: 91px;
+}
