@@ -1,26 +1,34 @@
 <ion-content>
-  <ion-grid>
-    <ion-row>
-      <ion-img
-        class="center"
-        style="width: 120px; height: 120px"
-        src="/assets/logo/logo-controle-de-gastos.png"
-      ></ion-img>
-    </ion-row>
-    <ion-row>
-      <ion-col style="text-align: center"> Controle de Gastos </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col class="centered-button">
-        <ion-button
-          type="submit"
-          color="primary"
-          (click)="authService.GoogleAuth()"
-          expand="block"
-        >
-          Entrar com Google
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <div class="formContent" *ngIf="!isGoogleLogin">
+    <ion-img
+      src="../../assets/image/DrCashLogo01.png"
+      class="avatarLogo"
+    ></ion-img>
+    <div class="loginForm">
+      <ion-item class="inputEmail" lines="none">
+        <ion-label
+          ><img src="../../assets/image/email.png" width="20px"
+        /></ion-label>
+        <ion-input placeholder="E-mail"></ion-input>
+      </ion-item>
+      <ion-item class="inputSenha" lines="none">
+        <ion-label
+          ><img src="../../assets/image/padlock.png" width="20px"
+        /></ion-label>
+        <ion-input placeholder="Senha"></ion-input>
+      </ion-item>
+      <button id="submitform">
+        <img src="../../assets/image/submitbotton.png" />
+      </button>
+      <div class="buttonsGroup">
+        <button class="googleLogin" (click)="googleSignup()">
+          <img src="../../assets/image/google.png" width="20px" /> Google
+        </button>
+        <button class="registerButton" [routerLink]="['/register']">
+          <img src="../../assets/image/contact-form.png" width="20px" />
+          Cadastrar
+        </button>
+      </div>
+    </div>
+  </div>
 </ion-content>

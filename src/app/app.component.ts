@@ -1,3 +1,4 @@
+import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { Component } from '@angular/core'
 import { Platform } from '@ionic/angular'
 import { SplashScreen } from '@ionic-native/splash-screen/ngx'
@@ -9,6 +10,15 @@ import {
   ActivatedRoute,
   NavigationEnd,
 } from '@angular/router'
+import {
+  Capacitor,
+  LocalNotification,
+  LocalNotificationActionPerformed,
+  Plugins,
+} from '@capacitor/core'
+import { NotificationService } from './services/notification.service'
+import { AuthenticationService } from './shared/authentication-service'
+const { LocalNotifications } = Plugins
 
 @Component({
   selector: 'app-root',
@@ -18,6 +28,7 @@ import {
 export class AppComponent {
   public title: string
   public isHomePage: boolean
+  public user: any
   private homeUrl = '/home'
 
   constructor(
@@ -26,6 +37,9 @@ export class AppComponent {
     private statusBar: StatusBar,
     private router: Router,
     private activatedRoute: ActivatedRoute,
+    private dataExpensesService: DataExpensesService,
+    private notificationService: NotificationService,
+    private authentication: AuthenticationService,
   ) {
     this.initializeApp()
 
@@ -38,19 +52,84 @@ export class AppComponent {
         )
       }
     })
+
+    this.authentication.userData.subscribe(user => (this.user = user))
   }
 
   initializeApp() {
+    LocalNotifications.requestPermission()
+
     this.platform.ready().then(() => {
       this.statusBar.styleDefault()
       this.splashScreen.hide()
+
+      this.addListenersNotifications()
     })
   }
 
   setTitlePage(newTitle: string) {
-    const defaultTitle = 'Controle de Gastos'
+    const defaultTitle = 'Dr. Cash'
 
     if (newTitle) this.title = newTitle
     else this.title = defaultTitle
+  }
+
+  private addListenersNotifications() {
+    if (Capacitor.platform !== 'web') {
+      LocalNotifications.addListener(
+        'localNotificationReceived',
+        (notification: LocalNotification) => {
+          console.log('notification received: ', notification)
+        },
+      )
+
+      LocalNotifications.addListener(
+        'localNotificationActionPerformed',
+        (notification: LocalNotificationActionPerformed) => {
+          switch (notification.actionId) {
+            case 'pay':
+              this.setPaidExpense(
+                notification.notification.extra.data.expenseId,
+              )
+              break
+            case 'reschedule':
+              const data = notification.notification.extra.data
+              this.rescheduleNotification(
+                data.expenseId,
+                data.expenseTitle,
+                data.expenseDueDate,
+                data.expenseValue,
+              )
+              break
+          }
+        },
+      )
+    }
+  }
+
+  private setPaidExpense(expenseId: string) {
+    this.dataExpensesService.PaidExpense(expenseId).then(() => {
+      console.log(`despesa: ${expenseId} marcada como paga`)
+      this.router.navigate(['/home'])
+    })
+  }
+
+  private rescheduleNotification(
+    expenseId: string,
+    expenseTitle: string,
+    expenseDueDate: Date,
+    expenseValue: number,
+  ) {
+    this.notificationService
+      .scheduleExpenseExpiration(
+        expenseId,
+        expenseTitle,
+        expenseDueDate,
+        expenseValue,
+        true,
+      )
+      .then(() => {
+        console.log(`notificação da despesa ${expenseId} reagendada`)
+      })
   }
 }

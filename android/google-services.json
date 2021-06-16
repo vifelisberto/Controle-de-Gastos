@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "5636877012",
+    "project_id": "dr-cash---controle-de-gastos",
+    "storage_bucket": "dr-cash---controle-de-gastos.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:5636877012:android:0c11971c0800532d156941",
+        "android_client_info": {
+          "package_name": "com.controlegastos.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "5636877012-9l10ecvm6gishi8tkov339bm28dfnj16.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.controlegastos.app",
+            "certificate_hash": "bbdf40fbe86d368543cf1be138a46482c2375df0"
+          }
+        },
+        {
+          "client_id": "5636877012-goraua7pbbs49ktqg8cpsgn2da7gbjg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDLvtNQ5RisM78nyKA5XC2pjk-W2ZcRikI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "5636877012-goraua7pbbs49ktqg8cpsgn2da7gbjg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

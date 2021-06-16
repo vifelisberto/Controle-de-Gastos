@@ -1,10 +1,9 @@
+import { NotificationService } from './notification.service'
 import { MonthYear } from './../components/month-year-select/month-year'
 import { Injectable } from '@angular/core'
 import { ExpenseItem } from '../components/expense-items/expense-item'
 import { v4 as uuidv4 } from 'uuid'
 import { Storage } from '@ionic/storage'
-import { category } from './category'
-import { repeat } from './repeat'
 import { ControlExpenses } from './control-expenses'
 
 @Injectable({
@@ -15,7 +14,10 @@ export class DataExpensesService {
   private yearsAndMonths: ControlExpenses
   private promiseData: Promise<void>
 
-  constructor(private storage: Storage) {
+  constructor(
+    private storage: Storage,
+    private notificationService: NotificationService,
+  ) {
     this.promiseData = this.fillYearsAndMonthsControlExpenses()
   }
 
@@ -59,6 +61,14 @@ export class DataExpensesService {
 
       this.setControlExpenses(this.yearsAndMonths)
 
+      if (!expense.paid)
+        this.notificationService.scheduleExpenseExpiration(
+          expense.id,
+          expense.title,
+          new Date(expense.dueDate),
+          expense.value,
+        )
+
       return true
     }
 
@@ -89,6 +99,10 @@ export class DataExpensesService {
                   dateExist.getFullYear() !== dateNew.getFullYear()
                 ) {
                   this.yearsAndMonths[year][month].splice(idx, 1)
+
+                  await this.notificationService.cancelNotificationScheduleByExpenseId(
+                    newExpense.id,
+                  )
 
                   this.addExpense(newExpense)
                 } else {
@@ -124,11 +138,29 @@ export class DataExpensesService {
                   this.yearsAndMonths[year][month].splice(idx, 1)
 
                   this.setControlExpenses(this.yearsAndMonths)
+
+                  await this.notificationService.cancelNotificationScheduleByExpenseId(
+                    expenseDelete.id,
+                  )
+
                   return expenseDelete
                 }
               }
             }
         }
+    }
+  }
+
+  public async PaidExpense(id: string) {
+    if (id) {
+      const expense = await this.getExpenseById(id)
+      expense.paid = true
+
+      await this.updateExpense(expense)
+
+      await this.notificationService.cancelNotificationScheduleByExpenseId(
+        expense.id,
+      )
     }
   }
 

@@ -3,7 +3,6 @@ import { DataExpensesService } from '../services/data-expenses.service'
 import { ExpenseItem } from './../components/expense-items/expense-item'
 import { Component } from '@angular/core'
 import { Router } from '@angular/router'
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',

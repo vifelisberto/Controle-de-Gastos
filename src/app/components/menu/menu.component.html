@@ -1,20 +1,51 @@
-<ion-menu side="end" swipeGesture="false" contentId="mainContent">
+<ion-menu
+  side="end"
+  swipeGesture="false"
+  contentId="mainContent"
+  class="menuNavegate"
+>
   <ion-header>
-    <ion-toolbar color="tertiary">
+    <ion-toolbar color="primary">
       <ion-title>Opções</ion-title>
+    </ion-toolbar>
+
+    <ion-toolbar *ngIf="user" class="user-data">
+      <ion-avatar>
+        <img [src]="user.photoURL" />
+      </ion-avatar>
+      <ion-label>{{ user.displayName }}</ion-label>
     </ion-toolbar>
   </ion-header>
   <ion-content>
     <ion-list>
-      <ion-item (click)="closeMenu()" [routerLink]="['/home']">Início</ion-item>
-      <ion-item (click)="closeMenu()" [routerLink]="['/login']">Login</ion-item>
-      <ion-item (click)="closeMenu()" [routerLink]="['/about']">Sobre</ion-item>
-      <ion-item (click)="closeMenu()" [routerLink]="['/config']"
-        >Gerenciar Notificações</ion-item
-      >
-      <ion-item (click)="closeMenu()" [routerLink]="['/analysis']"
-        >Analise de despesas</ion-item
-      >
+      <ion-item (click)="closeMenu()" [routerLink]="['/home']">
+        <ion-icon name="home-outline" slot="start"></ion-icon>
+        <ion-label class="styleTextMenu">Home</ion-label>
+      </ion-item>
+      <ion-item (click)="closeMenu()" [routerLink]="['/analysis']">
+        <ion-icon name="podium-outline" slot="start"></ion-icon>
+        <ion-label class="styleTextMenu">Graficos</ion-label>
+      </ion-item>
+      <ion-item (click)="closeMenu()" [routerLink]="['/config']">
+        <ion-icon name="notifications-outline" slot="start"></ion-icon>
+        <ion-label class="styleTextMenu">Configurações</ion-label>
+      </ion-item>
+      <ion-item (click)="closeMenu()" [routerLink]="['/tutorial']">
+        <ion-icon name="help-outline" slot="start"></ion-icon>
+        <ion-label class="styleTextMenu">Ajuda</ion-label>
+      </ion-item>
+      <div *ngIf="!isGoogleLogin">
+        <ion-item (click)="closeMenu()" [routerLink]="['/login']">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          <ion-label class="styleTextMenu">Login</ion-label>
+        </ion-item>
+      </div>
+      <div *ngIf="isGoogleLogin">
+        <ion-item (click)="logout()" [routerLink]="['/login']">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          <ion-label class="styleTextMenu">Logout</ion-label>
+        </ion-item>
+      </div>
     </ion-list>
   </ion-content>
 </ion-menu>
