@@ -6,7 +6,7 @@ import { Chart } from 'chart.js'
 @Component({
   selector: 'app-analysis-expenses',
   templateUrl: './analysis-expenses.component.html',
-  styleUrls: ['./analysis-expenses.component.css'],
+  styleUrls: ['./analysis-expenses.component.scss'],
 })
 export class AnalysisExpensesComponent {
   @ViewChild('barChart') barChart
