@@ -13,10 +13,16 @@
 .user-data {
   text-align: center;
   padding: 15% 0;
+  border-top: 3px solid black;
 
   ion-avatar,
   ion-label {
     margin: 0 auto;
     margin-bottom: 4%;
   }
+}
+
+ion-toolbar {
+  --background: #218c74;
+  color: white;
 }

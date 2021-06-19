@@ -1,44 +1,59 @@
 <ion-content>
-  <ion-card class="Grafico-Barra">
-    <ion-card-header>
-      <ion-card-subtitle
-        >Gastos totais referente ao ano de 2021</ion-card-subtitle
-      >
-      <ion-card-title>Gastos </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #barChart></canvas>
-    </ion-card-content>
-  </ion-card>
-  <ion-card class="Grafico-Linha">
-    <ion-card-header>
-      <ion-card-subtitle
-        >Gastos totais referente ao proximo trimestre</ion-card-subtitle
-      >
-      <ion-card-title>Gastos trimestrais </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #lineCanvas></canvas>
-    </ion-card-content>
-  </ion-card>
-  <ion-card class="Grafico-Pizza">
-    <ion-card-header>
-      <ion-card-subtitle
-        >Comparativo Bimestral mês atual com proximo mês</ion-card-subtitle
-      >
-      <ion-card-title>Comparativo meses </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #pieCanvas></canvas>
-    </ion-card-content>
-  </ion-card>
-  <ion-card class="Grafico-doughnutCanvas">
-    <ion-card-header>
-      <ion-card-subtitle>Gastos semestrais</ion-card-subtitle>
-      <ion-card-title>Gastos </ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <canvas #doughnutCanvas></canvas>
-    </ion-card-content>
-  </ion-card>
+  <ion-slides pager="true" [options]="swiper">
+    <ion-slide>
+      <ion-card class="grafico grafico--pizza">
+        <ion-card-header>
+          <ion-card-title>Comparativo bimestral</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <canvas
+            #pieCanvas
+            style="position: relative; height: 40vh; width: 80vw"
+          ></canvas>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card class="grafico grafico--linha">
+        <ion-card-header>
+          <ion-card-title>Comparativo trimestral</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <canvas
+            #lineCanvas
+            style="position: relative; height: 40vh; width: 80vw"
+          ></canvas>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card class="grafico grafico--semestral">
+        <ion-card-header>
+          <ion-card-title>Comparativo semestral</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <canvas
+            #doughnutCanvas
+            style="position: relative; height: 40vh; width: 80vw"
+          ></canvas>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+
+    <ion-slide>
+      <ion-card class="grafico grafico--barra">
+        <ion-card-header>
+          <ion-card-title>Comparativo anual </ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <canvas
+            #barChart
+            style="position: relative; height: 40vh; width: 80vw"
+          ></canvas>
+        </ion-card-content>
+      </ion-card>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

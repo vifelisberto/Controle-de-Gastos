@@ -7,7 +7,7 @@ import { ExpenseItem } from './expense-item'
 @Component({
   selector: 'app-expense-items',
   templateUrl: './expense-items.component.html',
-  styleUrls: ['./expense-items.component.css'],
+  styleUrls: ['./expense-items.component.scss'],
 })
 export class ExpenseItemsComponent implements OnChanges {
   @Input() expenses: ExpenseItem[]
