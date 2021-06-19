@@ -25,6 +25,7 @@ import { environment } from '../environments/environment'
 import localePt from '@angular/common/locales/pt'
 import { CadastroComponent } from './cadastro/cadastro.component'
 import { TutorialComponent } from './tutorial/tutorial.component'
+import { SwiperModule } from 'swiper/angular'
 registerLocaleData(localePt)
 
 @NgModule({
@@ -54,6 +55,7 @@ registerLocaleData(localePt)
     AngularFireAuthModule,
     AngularFireDatabaseModule,
     AngularFirestoreModule,
+    SwiperModule,
   ],
   providers: [
     StatusBar,
