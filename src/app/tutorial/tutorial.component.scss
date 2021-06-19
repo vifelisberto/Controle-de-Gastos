@@ -26,7 +26,11 @@ ion-slide {
 }
 
 .vamosNessaBtn {
-  --background: #4854e0;
+  --background: #218c74;
   color: white;
   border-radius: 91px;
+}
+
+:host ::ng-deep .swiper-pagination-bullet {
+  background-color: #218c74;
 }

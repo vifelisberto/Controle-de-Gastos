@@ -2,6 +2,7 @@ import { DataExpensesService } from 'src/app/services/data-expenses.service'
 import { ExpenseItem } from './../expense-items/expense-item'
 import { Component, ViewChild } from '@angular/core'
 import { Chart } from 'chart.js'
+import Swiper, { SwiperOptions } from 'swiper'
 
 @Component({
   selector: 'app-analysis-expenses',
@@ -36,6 +37,19 @@ export class AnalysisExpensesComponent {
   ]
 
   constructor(private dataExpensesService: DataExpensesService) {}
+
+  curDate = new Date()
+
+  swiper = {
+    pagination: {
+      el: '.swiper-pagination',
+      type: 'bullets',
+      clickable: true,
+      renderBullet(index, className) {
+        return `<span class="${className}">${getTextForPage(index)}</span>`
+      },
+    },
+  } as SwiperOptions
 
   async ionViewDidEnter() {
     await this.createBarChart()
@@ -171,7 +185,7 @@ export class AnalysisExpensesComponent {
         ],
         datasets: [
           {
-            label: 'Gastos referente ao Ano de 2020',
+            label: `Gastos referente ao ano de ${this.curDate.getFullYear()}`,
             data: [
               expensesMonthSum1,
               expensesMonthSum2,
@@ -187,21 +201,21 @@ export class AnalysisExpensesComponent {
               expensesMonthSum12,
             ],
             backgroundColor: [
-              'rgb(38, 194, 129)',
-              'rgb(255, 0, 0)',
-              'rgb(20, 0, 255)',
-              'rgb(255, 230, 0)',
-              'rgb(0, 255, 10)',
-              'rgb(60, 0, 70)',
-              'rgb(255, 6, 10)',
-              'rgb(20, 42, 255)',
-              'rgb(255, 230, 87)',
-              'rgb(13, 255, 55)',
-              'rgb(60, 25, 70)',
-              'rgb(255, 99, 99)',
+              '#2c2c54',
+              '#ff5252',
+              '#cd6133',
+              '#34ace0',
+              '#218c74',
+              '#84817a',
+              '#ccae62',
+              '#227093',
+              '#ff793f',
+              '#33d9b2',
+              '#84817a',
+              '#706fd3',
             ],
-            borderColor: 'rgb(38, 194, 129)',
-            borderWidth: 1,
+            // borderColor: 'rgb(38, 194, 129)',
+            // borderWidth: 1,
           },
         ],
       },
@@ -260,20 +274,13 @@ export class AnalysisExpensesComponent {
             label: 'Gastos no próximo trimestre',
             data: [expensesMonthSum1, expensesMonthSum2, expensesMonthSum3],
             backgroundColor: [
-              'rgb(38, 194, 129)',
-              'rgb(255, 0, 0)',
-              'rgb(20, 0, 255)',
-              'rgb(255, 230, 0)',
-              'rgb(0, 255, 10)',
-              'rgb(60, 0, 70)',
-              'rgb(255, 6, 10)',
-              'rgb(20, 42, 255)',
-              'rgb(255, 230, 87)',
-              'rgb(13, 255, 55)',
-              'rgb(60, 25, 70)',
-              'rgb(255, 99, 99)',
+              '#2c2c54',
+              '#ff5252',
+              '#cd6133',
+              '#34ace0',
+              '#218c74',
             ],
-            borderColor: 'rgb(38, 194, 129)',
+            // borderColor: '#450020',
             borderWidth: 1,
           },
         ],
@@ -318,10 +325,9 @@ export class AnalysisExpensesComponent {
         labels: [this.months[month1], this.months[date2.getMonth()]],
         datasets: [
           {
-            label: 'Gastos referente ao Ano de 2020',
+            label: `Gastos referente ao Ano de ${this.curDate.getFullYear()}`,
             data: [expensesMonthSum1, expensesMonthSum2],
-            backgroundColor: ['rgb(255, 0, 0)', 'rgb(20, 0, 255)'],
-            borderColor: 'rgb(38, 194, 129)',
+            backgroundColor: ['#2c2c54', '#ff5252'],
             borderWidth: 1,
           },
         ],
@@ -416,14 +422,14 @@ export class AnalysisExpensesComponent {
               expensesMonthSum6,
             ],
             backgroundColor: [
-              'rgb(38, 194, 129)',
-              'rgb(255, 0, 0)',
-              'rgb(20, 0, 255)',
-              'rgb(255, 230, 0)',
-              'rgb(0, 255, 10)',
-              'rgb(60, 0, 70)',
+              '#2c2c54',
+              '#ff5252',
+              '#cd6133',
+              '#34ace0',
+              '#218c74',
+              '#84817a',
             ],
-            borderColor: 'rgb(38, 194, 129)',
+            // borderColor: '#2c2c54',
             borderWidth: 1,
           },
         ],
@@ -440,5 +446,18 @@ export class AnalysisExpensesComponent {
         },
       },
     })
+  }
+}
+function getTextForPage(index) {
+  console.log(index)
+  switch (index) {
+    case 0:
+      return '2'
+    case 1:
+      return '3'
+    case 2:
+      return '6'
+    case 3:
+      return '12'
   }
 }

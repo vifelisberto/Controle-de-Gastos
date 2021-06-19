@@ -4,7 +4,7 @@ import { MonthYear } from './month-year'
 @Component({
   selector: 'app-month-year-select',
   templateUrl: './month-year-select.component.html',
-  styleUrls: ['./month-year-select.component.css'],
+  styleUrls: ['./month-year-select.component.scss'],
 })
 export class MonthYearSelectComponent implements OnInit {
   @Output() eventMonthYear = new EventEmitter<MonthYear>()

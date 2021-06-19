@@ -42,9 +42,14 @@
 
 #submitform {
   border-radius: 8px;
-  background-color: rgb(84, 84, 84);
+  background-color: #218c74;
   width: 60%;
   padding: 0.3rem 0px;
+
+  ion-icon {
+    font-size: 30px;
+    color: white;
+  }
 }
 
 .formContent {
